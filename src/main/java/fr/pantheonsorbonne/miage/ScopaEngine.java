@@ -19,14 +19,14 @@ public abstract class ScopaEngine {
 
     public static final int CARDS_IN_HAND_INITIAL_COUNT = 3;
 
+    Map<String, Queue<Card>> playerCollectedCards = new HashMap<>();
+    Map<String, Integer> playerCollectedScopa = new HashMap<>();
+
     /**
      * play a scopa with the provided players
      */
     public void play() {
-        //send the initial hand to every players
-        Map<String, Queue<Card>> playerCollectedCards = new HashMap<>();
-        Map<String, Integer> playerCollectedScopa = new HashMap<>();
-        
+        //send the initial hand to every players       
 
         giveInitialHandToPLayers(playerCollectedCards, playerCollectedScopa);
 
@@ -83,49 +83,14 @@ public abstract class ScopaEngine {
         }
 
 
-        //since we've left the loop, we have only 1 player left: the winner
-        String winner = players.poll();
+
+        //since we've left the loop, we have don't have any cards in the deck
+        String winner = getWinner(playerCollectedCards);
+        //String winner = players.poll();
         //send him the gameover and leave
         declareWinner(winner);
         System.out.println(winner + " won! bye");
         System.exit(0);
-    }
-
-    // voir ce que fait l'autre fonction getWinner() line 308 + eventually la supp/modif
-    protected String getWinner(Map<String, Queue<Card>> playerCollectedCards){
-        int maxCount=0;
-        String winner = "";
-        Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
-        for (Map.Entry player : playersScores.entrySet()){
-            if (playersScores.get(player.toString()) > maxCount){
-                maxCount=playersScores.get(player.toString());
-                winner=player.toString();
-            }
-        }
-        return winner;
-    }
-
-    protected int getWinnerScore(){
-        
-    }
-
-    protected Map<String, Integer> countPlayersScores (Map<String, Queue<Card>> playerCollectedCards){
-        Map<String, Integer> playerScore = new HashMap<>();
-        for (Map.Entry player : playerCollectedCards.entrySet()){
-            int count = 0;
-            if (player.toString().equals(bestCount(playerCollectedCards))){
-                count ++;
-            }
-            if (player.toString().equals(mostDenierCount(playerCollectedCards))){
-                count++;
-            }
-            if (player.toString().equals(havingSettebello(playerCollectedCards))){
-                count++;
-            }
-            playerScore.put(player.toString(), count);
-        }
-
-        return playerScore;
     }
 
     protected List<Card> getInitialRoundDeck() {
@@ -269,7 +234,8 @@ public abstract class ScopaEngine {
         roundDeck.offer(secondPlayerCard);
 
         //compute who is the winner
-        String winner = getWinner(firstPlayerInRound, secondPlayerInRound, firstPlayerCard, secondPlayerCard);
+        String winner = getWinner(playerCollectedCards);
+        //String winner = getWinner(firstPlayerInRound, secondPlayerInRound, firstPlayerCard, secondPlayerCard);
         //if there's a winner, we distribute the card to him
         if (winner != null) {
             giveCardsToPlayer(roundDeck, winner);
@@ -305,14 +271,42 @@ public abstract class ScopaEngine {
      * @param contestantBCard its card
      * @return the name of the winner or null if it's a tie
      */
-    protected static String getWinner(String contestantA, String contestantB, Card contestantACard, Card contestantBCard) {
-        if (contestantACard.getValue().getRank() > contestantBCard.getValue().getRank()) {
-            return contestantA;
-        } else if (contestantACard.getValue().getRank() < contestantBCard.getValue().getRank()) {
-            return contestantB;
+    protected String getWinner(Map<String, Queue<Card>> playerCollectedCards){
+        int maxCount=0;
+        String winner = "";
+        Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
+        for (Map.Entry<String,Integer> player : playersScores.entrySet()){
+            System.out.println(player.getKey());
         }
-        return null;
+        return winner;
     }
+
+
+    protected Map<String, Integer> countPlayersScores (Map<String, Queue<Card>> playerCollectedCards){
+        Map<String, Integer> playerScore = new HashMap<>();
+        for (Map.Entry<String,Queue<Card>> player : playerCollectedCards.entrySet()){
+            int count = 0;
+            if (player.getKey().equals(bestCount(playerCollectedCards))){
+                count ++;
+            }
+            if (player.getKey().equals(mostDenierCount(playerCollectedCards))){
+                count++;
+            }
+            if (player.getKey().equals(havingSettebello(playerCollectedCards))){
+                count++;
+            }
+            playerScore.put(player.toString(), count);
+        }
+        return playerScore;
+    }
+
+    protected void getcountPlayersScores (Map<String, Queue<Card>> playerCollectedCards){
+        Map<String, Integer> playerScore = countPlayersScores (playerCollectedCards);
+        for (Map.Entry player : playerScore.entrySet()){
+            System.out.println(player.getKey() + " a " + playerScore.get(player.toString()) + " points.");
+        }
+    }
+
 
     /**
      * give some card to a player
