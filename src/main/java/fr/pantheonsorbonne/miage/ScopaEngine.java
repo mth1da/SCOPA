@@ -276,7 +276,16 @@ public abstract class ScopaEngine {
         String winner = "";
         Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
         for (Map.Entry<String,Integer> player : playersScores.entrySet()){
-            System.out.println(player.getKey());
+            System.out.println(player.getKey() + " a " +player.getValue() + " points");
+            if(player.getValue()>maxCount){
+                maxCount = player.getValue();
+                winner = player.getKey();
+            }
+            else if(player.getValue()>maxCount){
+                maxCount = player.getValue();
+                winner = "nobody";
+                break;
+            }
         }
         return winner;
     }
@@ -288,14 +297,17 @@ public abstract class ScopaEngine {
             int count = 0;
             if (player.getKey().equals(bestCount(playerCollectedCards))){
                 count ++;
+                System.out.println(player.getKey() + "bestcount");
             }
             if (player.getKey().equals(mostDenierCount(playerCollectedCards))){
                 count++;
+                System.out.println(player.getKey() + "mostDenierCount");
             }
             if (player.getKey().equals(havingSettebello(playerCollectedCards))){
                 count++;
+                System.out.println(player.getKey() + "mostDenierCount");
             }
-            playerScore.put(player.toString(), count);
+            playerScore.put(player.getKey().toString(), count);
         }
         return playerScore;
     }
