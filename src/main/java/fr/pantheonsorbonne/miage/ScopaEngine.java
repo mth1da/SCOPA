@@ -281,7 +281,7 @@ public abstract class ScopaEngine {
                 maxCount = player.getValue();
                 winner = player.getKey();
             }
-            else if(player.getValue()>maxCount){
+            else if(player.getValue()==maxCount){
                 maxCount = player.getValue();
                 winner = "nobody";
                 break;
