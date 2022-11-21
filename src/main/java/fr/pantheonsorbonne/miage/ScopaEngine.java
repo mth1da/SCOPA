@@ -216,15 +216,12 @@ public abstract class ScopaEngine {
             int count = 0;
             if (player.getKey().equals(bestCount(playerCollectedCards))){
                 count ++;
-                System.out.println(player.getKey() + "bestcount");
             }
             if (player.getKey().equals(mostDenierCount(playerCollectedCards))){
                 count++;
-                System.out.println(player.getKey() + "mostDenierCount");
             }
             if (player.getKey().equals(havingSettebello(playerCollectedCards))){
                 count++;
-                System.out.println(player.getKey() + "mostDenierCount");
             }
             playerScore.put(player.getKey(), count);
         }
