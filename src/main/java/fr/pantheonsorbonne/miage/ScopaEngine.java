@@ -307,7 +307,7 @@ public abstract class ScopaEngine {
                 count++;
                 System.out.println(player.getKey() + "mostDenierCount");
             }
-            playerScore.put(player.getKey().toString(), count);
+            playerScore.put(player.getKey(), count);
         }
         return playerScore;
     }
