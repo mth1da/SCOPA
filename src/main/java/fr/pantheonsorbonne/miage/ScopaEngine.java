@@ -285,10 +285,10 @@ public abstract class ScopaEngine {
 	}
 
 	/**
-	 * gives the name of the player having the most pairs at the end of the game
+	 * gives the name of the player having the most pairs at the end of the game; null if 2 players have the same count
 	 *
 	 * @param playerCollectedCards
-	 * @return the player having the most pairs at the end of the game
+	 * @return name of the player or null
 	 */
 	String bestCount(Map<String, Queue<Card>> playerCollectedCards) {
 		int maxcount = 0;
@@ -298,13 +298,15 @@ public abstract class ScopaEngine {
 				maxcount = playerCollectedCards.get(player).size();
 				bestPlayer = player;
 			}
+            else if (playerCollectedCards.get(player).size() == maxcount){
+                bestPlayer = null;
+            }
 		}
 		return bestPlayer;
 	}
 
 	/**
-	 * gives the name of the player having the most cards of deniers at the end of
-	 * the game
+	 * gives the name of the player having the most cards of deniers at the end of the game; null if 2 players have the same count
 	 *
 	 * @param playerCollectedCards
 	 * @return the player having the most cards of deniers
@@ -319,6 +321,9 @@ public abstract class ScopaEngine {
 				maxcount = counter;
 				bestPlayer = player;
 			}
+            else if (counter == maxcount){
+                bestPlayer = null;
+            }
 		}
 		return bestPlayer;
 	}
