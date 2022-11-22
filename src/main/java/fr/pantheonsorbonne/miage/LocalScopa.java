@@ -72,7 +72,15 @@ public class LocalScopa extends ScopaEngine {
         if (this.playerCards.get(player).isEmpty()) {
             throw new NoMoreCardException();
         } else {
-            return this.playerCards.get(player).poll();
+        	Card card= this.playerCards.get(player).poll();
+        	if (card.toString().equals("7D")) {
+        		if (!this.playerCards.get(player).isEmpty()) {
+        			Card secondCard = this.playerCards.get(player).poll();
+        			this.playerCards.get(player).offer(card);
+        			card=secondCard;
+        		}
+        	}        	
+            return card;
         }
     }
 
