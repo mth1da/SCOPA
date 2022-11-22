@@ -18,9 +18,9 @@ A la fin de chaque tour, une carte est distribuée à chaque joueur pour qu’il
 ## Fin de la partie
 
 A la fin de la partie les points sont répartis de la manière suivante :
--	1 point pour le joueur qui a le plus de cartes ;
+-	1 point pour le joueur qui a le plus de cartes. Si deux joueurs ont le même nombre de cartes, aucun point n'est attribué ;
 -	1 point pour le joueur qui a le settebello (7 de deniers) ;
--	1 point pour le joueur qui a le plus de cartes de deniers ; 
+-	1 point pour le joueur qui a le plus de cartes de deniers. Si deux joueurs ont le même nombre de cartes de deniers, aucun point n'est attribué.
 -	1 point pour chaque scopa effectuée.
 Le gagnant est celui qui a le plus de points.
 
