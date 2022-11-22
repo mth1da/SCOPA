@@ -12,6 +12,8 @@ import java.util.Set;
 import fr.pantheonsorbonne.miage.exception.NoMoreCardException;
 import fr.pantheonsorbonne.miage.game.Card;
 import fr.pantheonsorbonne.miage.game.Deck;
+import fr.pantheonsorbonne.miage.enums.CardValue;
+
 
 /**
  * this class is a abstract version of the engine, to be used locally on through the network
@@ -32,7 +34,11 @@ public abstract class ScopaEngine {
         giveInitialHandToPLayers(playerCollectedCards, playerCollectedScopa);
 
         Queue<Card> roundDeck = new LinkedList<>(); // la table du jeu
-        roundDeck.addAll(getInitialRoundDeck());
+        do{
+            roundDeck.addAll(getInitialRoundDeck());
+        }
+        while(checkOverThreeSameCardValue(roundDeck));
+
 
         // make a queue with all the players
         final Queue<String> players = new LinkedList<>();
@@ -91,6 +97,31 @@ public abstract class ScopaEngine {
 
     protected List<Card> getInitialRoundDeck() {
         return Arrays.asList(Deck.getRandomCards(4));
+    }
+
+    /**
+     * informs if there are three or more cards of the same value on the table
+     *
+     * @return true if so, false if not
+     */
+    protected boolean checkOverThreeSameCardValue(Queue<Card> queue){
+        HashMap<CardValue,Integer> map = new HashMap<>();
+        int count=0;
+        for (Card card : queue){
+            CardValue value = card.getValue();
+            if (map.containsKey(value)){
+                count++;
+                map.put(value,count);
+                if (map.get(value)>3){
+                    return true;
+                }
+            }
+            else{
+                count=1;
+                map.put(value,count);
+            }
+        }
+        return false;
     }
 
     protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa) {
