@@ -135,19 +135,16 @@ public abstract class ScopaEngine {
      */
     protected boolean checkOverThreeSameCardValue(Queue<Card> queue){
         HashMap<CardValue,Integer> map = new HashMap<>();
-        int count=0;
         for (Card card : queue){
             CardValue value = card.getValue();
             if (map.containsKey(value)){
-                count++;
-                map.put(value,count);
+                map.put(value,map.get(value)+1);
                 if (map.get(value)>3){
                     return true;
                 }
             }
             else{
-                count=1;
-                map.put(value,count);
+                map.put(value,1);
             }
         }
         return false;
