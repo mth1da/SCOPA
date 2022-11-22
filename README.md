@@ -4,7 +4,7 @@ La Scopa se joue avec 40 cartes de symbole coupes, épées, bâtons et deniers. 
 
 ## Mise en place
 
-On distribue 3 cartes à chaque joueur et on en pose 4 face découverte sur la table. Si parmi ces cartes il y a 3 ou 4 cartes identiques, on ne pourra pas faire de scopa durant la partie, on remet donc 4 autres cartes.
+On distribue 3 cartes à chaque joueur et on en pose 4 face découverte sur la table. Si parmi ces cartes il y a 3 ou 4 cartes de même valeur, on ne pourra pas faire de scopa durant la partie, on remet donc 4 autres cartes.
 
 ## Déroulé de la partie
 
