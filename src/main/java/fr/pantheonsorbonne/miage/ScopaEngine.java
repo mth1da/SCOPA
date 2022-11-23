@@ -316,7 +316,7 @@ public abstract class ScopaEngine {
 		String bestPlayer = "";
 		for (String player : playerCollectedCards.keySet()) {
 			long counter = playerCollectedCards.get(player).stream()
-					.filter(card -> card.getColor().name().equals("DENIER")).count();
+					.filter(card -> card.getColor().name().equals("DIAMOND")).count();
 			if (counter > maxcount) {
 				maxcount = counter;
 				bestPlayer = player;

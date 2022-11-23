@@ -49,15 +49,15 @@ public class AppTest {
     @Test
     public void shouldAnswerWithTrue() {
 
-        Card[] cardsJ1 = new Card[]{new Card(CardColor.BATON, CardValue.ACE), new Card(CardColor.DENIER, CardValue.SEVEN)};
-        Card[] cardsJ2 = new Card[]{new Card(CardColor.EPEE, CardValue.FOUR), new Card(CardColor.EPEE, CardValue.FIVE)};
+        Card[] cardsJ1 = new Card[]{new Card(CardColor.SPADE, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
+        Card[] cardsJ2 = new Card[]{new Card(CardColor.CLUB, CardValue.FOUR), new Card(CardColor.SPADE, CardValue.FIVE)};
         Deck.getRandomCards(40);
         LocalScopaTest localScopaTest = new LocalScopaTest(
 
-                Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.BATON, CardValue.KING)));
+                Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.KING)));
         localScopaTest.play();
-
     }
+
 
 
 }
