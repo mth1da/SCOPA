@@ -16,6 +16,10 @@ public class LocalScopa extends ScopaEngine {
     protected Queue<Card> getPlayerCards(String playerName){
         return playerCards.get(playerName);
     }
+    
+    protected Map<String, Queue<Card>> allPlayerCards(){
+    	return playerCards;
+    }
 
     public LocalScopa(Set<String> initialPlayers) {
         this.initialPlayers = initialPlayers;
@@ -24,6 +28,9 @@ public class LocalScopa extends ScopaEngine {
         }
     }
 
+    protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards){
+    	return super.countPlayersScores(playerCollectedCards);
+    }
     public static void main(String... args) {
         LocalScopa localScopa = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
         localScopa.play();

@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.miage;
 
 import com.google.common.collect.Lists;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import fr.pantheonsorbonne.miage.enums.CardColor;
 import fr.pantheonsorbonne.miage.enums.CardValue;
 import fr.pantheonsorbonne.miage.game.Card;
@@ -48,13 +49,38 @@ public class AppTest {
 
     @Test
     public void shouldAnswerWithTrue() {
-
-        Card[] cardsJ1 = new Card[]{new Card(CardColor.SPADE, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
-        Card[] cardsJ2 = new Card[]{new Card(CardColor.CLUB, CardValue.FOUR), new Card(CardColor.SPADE, CardValue.FIVE)};
+ 
+        Card[] cardsJ1 = new Card[]{new Card(CardColor.DIAMOND, CardValue.ACE),new Card(CardColor.DIAMOND, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
+        Card[] cardsJ2 = new Card[]{ new Card(CardColor.DIAMOND, CardValue.FIVE)};
         Deck.getRandomCards(40);
         LocalScopaTest localScopaTest = new LocalScopaTest(
 
-                Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.KING)));
+        Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.SEVEN)));
         localScopaTest.play();
+
+        Map<String, Integer> scores=localScopaTest.countPlayersScores(localScopaTest.playerCollectedCards);
+        System.out.println("Scores are:"+scores);
+        
     }
+<<<<<<< HEAD
+
+    @Test
+    public void counScoreTest() {
+        Card[] cardsJ1 = new Card[]{new Card(CardColor.DIAMOND, CardValue.ACE),new Card(CardColor.DIAMOND, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
+        Card[] cardsJ2 = new Card[]{ new Card(CardColor.DIAMOND, CardValue.FIVE)};
+        Deck.getRandomCards(40);
+        LocalScopaTest localScopaTest = new LocalScopaTest(
+
+        Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.SEVEN)));
+        localScopaTest.play();
+
+        Map<String, Integer> scores=localScopaTest.countPlayersScores(localScopaTest.playerCollectedCards);
+        assertEquals(scores.get("J1"),3);
+ 
+     
+        
+    }
+
+=======
+>>>>>>> f8d74da0633b228dc35ef54bceb9c3fd00285445
 }

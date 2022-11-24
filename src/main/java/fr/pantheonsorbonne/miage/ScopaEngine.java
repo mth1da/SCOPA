@@ -27,6 +27,7 @@ public abstract class ScopaEngine {
 	Map<String, Queue<Card>> playerCollectedCards = new HashMap<>();
 	Map<String, Integer> playerCollectedScopa = new HashMap<>();
 
+	 protected abstract Map<String, Queue<Card>> allPlayerCards();
 	/**
 	 * play a scopa with the provided players
 	 */
@@ -122,7 +123,7 @@ public abstract class ScopaEngine {
 		String winner = getWinner(playerCollectedCards);
 		// send the winner the gameover and leave
 		declareWinner(winner);
-		System.exit(0);
+		//System.exit(0);
 	}
 
 	protected List<Card> getInitialRoundDeck() {

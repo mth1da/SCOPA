@@ -141,4 +141,10 @@ public class ScopaNetworkEngine extends ScopaEngine {
         return null;
     }
 
+	@Override
+	protected Map<String, Queue<Card>> allPlayerCards() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
