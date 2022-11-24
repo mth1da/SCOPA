@@ -23,13 +23,14 @@ public class Deck {
             }
         }
         //shuffle them
+        /*
         for (int i = 0; i < deckSize; i++) {
             int randomIndexToSwap = random.nextInt(deckSize);
             Card temp = deck[randomIndexToSwap];
             deck[randomIndexToSwap] = deck[i];
             deck[i] = temp;
 
-        }
+        }*/
     }
 
     /**
