@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.miage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -270,11 +271,17 @@ public abstract class ScopaEngine {
 		Map<String, Integer> playerScore = new HashMap<>();
 		for (Map.Entry<String, Queue<Card>> player : playerCollectedCards.entrySet()) {
 			int count = 0;
-			if (player.getKey().equals(bestCount(playerCollectedCards))) {
-				count++;
+			ArrayList<String> bestCountPlayers = bestCount(playerCollectedCards);
+			for(String joueur : bestCountPlayers){
+				if (player.getKey().equals(joueur)) {
+					count++;
+				}
 			}
-			if (player.getKey().equals(mostDenierCount(playerCollectedCards))) {
-				count++;
+			ArrayList<String> mostDenierCountPlayers = bestCount(playerCollectedCards);
+			for(String joueur : mostDenierCountPlayers){
+				if (player.getKey().equals(joueur)) {
+					count++;
+				}
 			}
 			if (player.getKey().equals(havingSettebello(playerCollectedCards))) {
 				count++;
@@ -290,19 +297,21 @@ public abstract class ScopaEngine {
 	 * @param playerCollectedCards
 	 * @return name of the player or null
 	 */
-	String bestCount(Map<String, Queue<Card>> playerCollectedCards) {
+	ArrayList<String> bestCount(Map<String, Queue<Card>> playerCollectedCards) {
 		int maxcount = 0;
-		String bestPlayer = "";
+		ArrayList<String> bestPlayers = new ArrayList<>();
 		for (String player : playerCollectedCards.keySet()) {
 			if (playerCollectedCards.get(player).size() > maxcount) {
 				maxcount = playerCollectedCards.get(player).size();
-				bestPlayer = player;
 			}
-            else if (playerCollectedCards.get(player).size() == maxcount){
-                bestPlayer = null;
-            }
 		}
-		return bestPlayer;
+		for (String player : playerCollectedCards.keySet()) {
+			if (playerCollectedCards.get(player).size() == maxcount) {
+				bestPlayers.add(player);
+			}
+		}
+
+		return bestPlayers;
 	}
 
 	/**
@@ -311,21 +320,23 @@ public abstract class ScopaEngine {
 	 * @param playerCollectedCards
 	 * @return the player having the most cards of deniers
 	 */
-	String mostDenierCount(Map<String, Queue<Card>> playerCollectedCards) {
+	ArrayList<String> mostDenierCount(Map<String, Queue<Card>> playerCollectedCards) {
 		long maxcount = 0;
-		String bestPlayer = "";
+		ArrayList<String> bestPlayers = new ArrayList<>();
 		for (String player : playerCollectedCards.keySet()) {
 			long counter = playerCollectedCards.get(player).stream()
 					.filter(card -> card.getColor().name().equals("DIAMOND")).count();
 			if (counter > maxcount) {
 				maxcount = counter;
-				bestPlayer = player;
 			}
-            else if (counter == maxcount){
-                bestPlayer = null;
-            }
 		}
-		return bestPlayer;
+		for (String player : playerCollectedCards.keySet()) {
+				if( playerCollectedCards.get(player).stream()
+				.filter(card -> card.getColor().name().equals("DIAMOND")).count() == maxcount){
+					bestPlayers.add(player);
+				}
+		}
+		return bestPlayers;
 	}
 
 	/**

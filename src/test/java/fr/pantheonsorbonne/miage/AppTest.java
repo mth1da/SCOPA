@@ -57,7 +57,4 @@ public class AppTest {
                 Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.KING)));
         localScopaTest.play();
     }
-
-
-
 }

@@ -4,7 +4,6 @@ import fr.pantheonsorbonne.miage.exception.NoMoreCardException;
 import fr.pantheonsorbonne.miage.game.Card;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * this class implements the scopa locally
