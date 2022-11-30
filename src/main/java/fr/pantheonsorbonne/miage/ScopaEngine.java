@@ -141,7 +141,7 @@ public abstract class ScopaEngine {
             CardValue value = card.getValue();
             if (map.containsKey(value)){
                 map.put(value,map.get(value)+1);
-                if (map.get(value)>3){
+                if (map.get(value)>=3){
                     return true;
                 }
             }
