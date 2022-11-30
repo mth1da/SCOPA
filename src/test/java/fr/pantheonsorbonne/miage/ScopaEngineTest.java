@@ -12,6 +12,25 @@ class ScopaEngineTest {
 
     @Test
     void makePair() {
+
+        String CarteAttendue = "7D";
+        Card CarteObtenue = test.makePair(playerCardsTest, roundDeckTest);
+
+
+        assertEquals(CarteAttendue, CarteObtenue.toString());
+    }
+
+    @Test
+    void removeRoundDeckCardTest(){
+        Queue roundDeckTest = new LinkedList<>();
+        roundDeckTest.add(new Card[]{new Card(CardColor.DIAMOND, CardValue.SEVEN), new Card(CardColor.HEART, CardValue.ACE), new Card(CardColor.CLUB, CardValue.KING), new Card(CardColor.SPADE, CardValue.SIX)});
+
+        Card matchCardTest = new Card(CardColor.DIAMOND, CardValue.SEVEN);
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals(CarteAttendue, CarteObtenue);
+
     }
 
     @Test
@@ -37,6 +56,9 @@ class ScopaEngineTest {
 
         assertEquals(résultatAttendu, résultatObtenu);
     }
+class ScopaEngineTest extends ScopaEngine{
+
+    @Test
 
    
 
