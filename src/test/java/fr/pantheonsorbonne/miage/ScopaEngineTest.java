@@ -174,6 +174,9 @@ class ScopaEngineTest {
         assertEquals(résultatAttendu, résultatObtenu);
     }
 
+    /*
+     * tests on mostDenierCount method
+     */
     @Test
     void onePlayerHavingMostDenierCountTest() {
         
@@ -240,7 +243,7 @@ class ScopaEngineTest {
     }
 
     /*
-     * tests the settebello
+     * tests on the settebello
      */
     @Test
     void havingSettebelloTest(){
