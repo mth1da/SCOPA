@@ -62,10 +62,9 @@ public class AppTest {
         System.out.println("Scores are:"+scores);
         
     }
-<<<<<<< HEAD
 
     @Test
-    public void counScoreTest() {
+    public void countScoreTest() {
         Card[] cardsJ1 = new Card[]{new Card(CardColor.DIAMOND, CardValue.ACE),new Card(CardColor.DIAMOND, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
         Card[] cardsJ2 = new Card[]{ new Card(CardColor.DIAMOND, CardValue.FIVE)};
         Deck.getRandomCards(40);
@@ -75,12 +74,8 @@ public class AppTest {
         localScopaTest.play();
 
         Map<String, Integer> scores=localScopaTest.countPlayersScores(localScopaTest.playerCollectedCards);
-        assertEquals(scores.get("J1"),3);
- 
-     
-        
+        assertEquals(3,scores.get("J1"));
     }
 
-=======
->>>>>>> f8d74da0633b228dc35ef54bceb9c3fd00285445
+   
 }
