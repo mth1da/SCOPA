@@ -66,7 +66,8 @@ public abstract class ScopaEngine {
 			players.offer(currentPlayer);
 
 			if (getPlayerCards(currentPlayer).size() > 0) {
-				Card pairCard = makePair(currentPlayer, roundDeck);
+				Card pairCard = makePair(getPlayerCards(currentPlayer), roundDeck);
+				//Card pairCard = makePair(currentPlayer, roundDeck);
 				if (pairCard != null) {
 					Card retiredCard = removeRoundDeckCard(pairCard, roundDeck);
 					getPlayerCards(currentPlayer).remove(pairCard);
@@ -178,14 +179,15 @@ public abstract class ScopaEngine {
 		return null;
 	}
 
-	Card makePair(String player, Queue<Card> roundDeck) {
-		Queue<Card> playerCards = getPlayerCards(player);
+	Card makePair(Queue<Card> playerCards, Queue<Card> roundDeck) {
+	//Card makePair(String player, Queue<Card> roundDeck) {
+		//Queue<Card> playerCards = getPlayerCards(player);
 		Card selectedCard = null;
 
 		// apply 7D strategy
 		for (Card card : roundDeck) {
 			if (card.toString().equals("7D")) {
-				for (Card pcard : getPlayerCards(player)) {
+				for (Card pcard : playerCards) {
 					if (pcard.getValue().getStringRepresentation().equals("7")) {
 						return pcard;
 					}

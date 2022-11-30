@@ -67,9 +67,9 @@ class ScopaEngineTest {
     }
 class ScopaEngineTest extends ScopaEngine{
 
-    @Test
-    void makePair() {
-    }
+
+
+   
 
     @Test
     void checkGameResetIfThreeSameCardValue() {
