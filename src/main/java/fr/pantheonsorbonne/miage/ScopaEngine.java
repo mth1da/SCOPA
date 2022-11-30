@@ -197,7 +197,7 @@ public abstract class ScopaEngine {
 
 		// apply take max pair strategy
 		int maxValue = 0;
-		for (Card card : playerCards) {
+		for(Card card : playerCards) {
 			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0) {
 				if (card.getValue().getRank() > maxValue) {
 					maxValue = card.getValue().getRank();
