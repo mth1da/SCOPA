@@ -11,7 +11,35 @@ import fr.pantheonsorbonne.miage.game.Card;
 class ScopaEngineTest {
 
     @Test
-    void makePair() {
+    void makePairTest() {
+        Queue roundDeckTest = new LinkedList<>();
+        roundDeckTest.add(new Card[]{new Card(CardColor.DIAMOND, CardValue.SEVEN), new Card(CardColor.HEART, CardValue.ACE), new Card(CardColor.CLUB, CardValue.KING), new Card(CardColor.SPADE, CardValue.SIX)});
+        Queue playerCardsTest = new LinkedList<>();
+        playerCardsTest.add(new Card[]{new Card(CardColor.HEART, CardValue.SEVEN), new Card(CardColor.DIAMOND, CardValue.ACE), new Card(CardColor.SPADE, CardValue.KING)});
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        String CarteAttendue = "7D";
+        Card CarteObtenue = test.makePair(playerCardsTest, roundDeckTest);
+
+
+        assertEquals(CarteAttendue, CarteObtenue.toString());
+    }
+
+    @Test
+    void removeRoundDeckCardTest(){
+        Queue roundDeckTest = new LinkedList<>();
+        roundDeckTest.add(new Card[]{new Card(CardColor.DIAMOND, CardValue.SEVEN), new Card(CardColor.HEART, CardValue.ACE), new Card(CardColor.CLUB, CardValue.KING), new Card(CardColor.SPADE, CardValue.SIX)});
+
+        Card matchCardTest = new Card(CardColor.DIAMOND, CardValue.SEVEN);
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        String CarteAttendue = "7D";
+        Card CarteObtenue = test.removeRoundDeckCard(matchCardTest, roundDeckTest);
+
+        assertEquals(CarteAttendue, CarteObtenue);
+
     }
 
     @Test
@@ -37,6 +65,8 @@ class ScopaEngineTest {
 
         assertEquals(résultatAttendu, résultatObtenu);
     }
+
+
 
    
 

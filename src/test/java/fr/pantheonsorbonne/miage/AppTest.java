@@ -62,7 +62,6 @@ public class AppTest {
         System.out.println("Scores are:"+scores);
         
     }
-<<<<<<< HEAD
 
     @Test
     public void counScoreTest() {
@@ -81,6 +80,4 @@ public class AppTest {
         
     }
 
-=======
->>>>>>> f8d74da0633b228dc35ef54bceb9c3fd00285445
 }
