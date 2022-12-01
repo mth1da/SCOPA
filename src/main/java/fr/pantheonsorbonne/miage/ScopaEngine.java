@@ -65,7 +65,7 @@ public abstract class ScopaEngine {
 			// and put it immediately at the end
 			players.offer(currentPlayer);
 
-			if (getPlayerCards(currentPlayer).size() > 0) {
+			if (!getPlayerCards(currentPlayer).isEmpty()) {
 				Card pairCard = makePair(getPlayerCards(currentPlayer), roundDeck);
 				//Card pairCard = makePair(currentPlayer, roundDeck);
 				if (pairCard != null) {
@@ -283,11 +283,10 @@ public abstract class ScopaEngine {
         Card selectedCard=null;
         int maxValue = 0;
 		for(Card card : playerCards) {
-			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0) {
-				if (card.getValue().getRank() > maxValue) {
+			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0 
+				&& card.getValue().getRank() > maxValue) {
 					maxValue = card.getValue().getRank();
 					selectedCard = card;
-				}
 			}
 		}
         return selectedCard;
@@ -446,7 +445,7 @@ public abstract class ScopaEngine {
 	// not used for now
 	protected void getCountPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
 		Map<String, Integer> playerScore = countPlayersScores(playerCollectedCards);
-		for (Map.Entry player : playerScore.entrySet()) {
+		for (Map.Entry<String,Integer> player : playerScore.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
 		}
 	}

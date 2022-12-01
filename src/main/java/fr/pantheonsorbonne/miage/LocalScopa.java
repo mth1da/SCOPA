@@ -28,13 +28,14 @@ public class LocalScopa extends ScopaEngine {
         }
     }
 
+    @Override
     protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards){
     	return super.countPlayersScores(playerCollectedCards);
     }
 
-    
+
     public static void main(String... args) {
-        LocalScopa localScopa = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
+        LocalScopa localScopa = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3", "Joueur4"));
         localScopa.play();
 
     }
@@ -81,12 +82,10 @@ public class LocalScopa extends ScopaEngine {
             throw new NoMoreCardException();
         } else {
         	Card card= this.playerCards.get(player).poll();
-        	if (card.toString().equals("7D")) {
-        		if (!this.playerCards.get(player).isEmpty()) {
+        	if (card.toString().equals("7D") && !this.playerCards.get(player).isEmpty()) {
         			Card secondCard = this.playerCards.get(player).poll();
         			this.playerCards.get(player).offer(card);
         			card=secondCard;
-        		}
         	}        	
             return card;
         }
