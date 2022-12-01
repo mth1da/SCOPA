@@ -181,13 +181,19 @@ public abstract class ScopaEngine {
 		//Queue<Card> playerCards = getPlayerCards(player);
 
 		// apply 7D strategy
-		if (settebelloStrategy(playerCards, roundDeck) != null){
-            return settebelloStrategy(playerCards, roundDeck);
+		if (settebelloInDeckStrategy(playerCards, roundDeck) != null){
+            return settebelloInDeckStrategy(playerCards, roundDeck);
+        }
+        else if (settebelloInHandStrategy(playerCards, roundDeck) != null){
+            return settebelloInHandStrategy(playerCards, roundDeck);
         }
 
         //apply denier strategy
-        else if (denierStrategy(playerCards, roundDeck) != null){
-            return denierStrategy(playerCards, roundDeck);
+        else if (denierCardInDeckStrategy(playerCards, roundDeck) != null){
+            return denierCardInDeckStrategy(playerCards, roundDeck);
+        }
+        else if (denierCardInHandStrategy(playerCards, roundDeck) != null){
+            return denierCardInHandStrategy(playerCards, roundDeck);
         }
 
 		// apply take max pair strategy
@@ -201,7 +207,7 @@ public abstract class ScopaEngine {
      * and if the player have a card value of 7
      * the player will make a pair with its 7 to take the settebello
      */
-    Card settebelloStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+    Card settebelloInDeckStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
         for (Card card : roundDeck) {
 			if (card.toString().equals("7D")) {
 				for (Card pcard : playerCards) {
@@ -215,11 +221,30 @@ public abstract class ScopaEngine {
     }
 
     /*
-     * applying denier strategy : if there's a card of denier in the round deck 
-     * and if the player have a card value which matches the value of the card of denier
-     * the player will make a pair with this card value to take the denier card
+     * applying 7D strategy : if the player has a settebello in his hand 
+     * and if there is a card value of 7 in the deck
+     * the player will make a pair with its settebello to take the 7 
+     * by doing such, the player secures the settebello to its collected cards
      */
-    Card denierStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+    Card settebelloInHandStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+        for (Card pcard : playerCards){
+            if (pcard.toString().equals("7D")){
+                for (Card card : roundDeck){
+                    if (card.getValue().getStringRepresentation().equals("7")){
+                        return pcard;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /*
+     * applying denier strategy : if there's a card of denier in the round deck 
+     * and if the player have a card which matches the value of the card of denier
+     * the player will make a pair with this card to take the denier card
+     */
+    Card denierCardInDeckStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
         for (Card card : roundDeck) {
 			if (card.getColor().name().equals("DIAMOND")) {
 				for (Card pcard : playerCards) {
@@ -229,6 +254,24 @@ public abstract class ScopaEngine {
 				}
 			}
 		}
+        return null;
+    }
+
+    /*
+     * applying denier strategy : if the player has a card of denier in his hand 
+     * and if there is a card which matches the value of the player's card of denier in the deck
+     * the player will make a pair with this card to secure its denier card
+     */
+    Card denierCardInHandStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+        for (Card pcard : playerCards){
+            if (pcard.getColor().name().equals("DIAMOND")){
+                for (Card card : roundDeck){
+                    if (card.getValue().getStringRepresentation().equals(pcard.getValue().getStringRepresentation())){
+                        return pcard;
+                    }
+                }
+            }
+        }
         return null;
     }
 
