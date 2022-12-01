@@ -135,11 +135,11 @@ class ScopaEngineTest {
         playerCollectedCardsTest.put("Joueur1", J1collectedCards);
         playerCollectedCardsTest.put("Joueur2", J2collectedCards);
 
-        ArrayList<String> résultatAttendu = new ArrayList<>();
-        résultatAttendu.add("Joueur2");
-        ArrayList<String> résultatObtenu = test.bestCount(playerCollectedCardsTest);
+        ArrayList<String> resultatAttendu = new ArrayList<>();
+        resultatAttendu.add("Joueur2");
+        ArrayList<String> resultatObtenu = test.bestCount(playerCollectedCardsTest);
 
-        assertEquals(résultatAttendu, résultatObtenu);
+        assertEquals(resultatAttendu, resultatObtenu);
     }
 
     @Test
@@ -166,12 +166,12 @@ class ScopaEngineTest {
         playerCollectedCardsTest.put("Joueur2", J2collectedCards);
         playerCollectedCardsTest.put("Joueur3", J3collectedCards);
 
-        ArrayList<String> résultatAttendu = new ArrayList<>();
-        résultatAttendu.add("Joueur2");
-        résultatAttendu.add("Joueur1");
-        ArrayList<String> résultatObtenu = test.bestCount(playerCollectedCardsTest);
+        ArrayList<String> resultatAttendu = new ArrayList<>();
+        resultatAttendu.add("Joueur2");
+        resultatAttendu.add("Joueur1");
+        ArrayList<String> resultatObtenu = test.bestCount(playerCollectedCardsTest);
 
-        assertEquals(résultatAttendu, résultatObtenu);
+        assertEquals(resultatAttendu, resultatObtenu);
     }
 
     /*

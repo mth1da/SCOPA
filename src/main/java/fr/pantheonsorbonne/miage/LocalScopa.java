@@ -31,6 +31,8 @@ public class LocalScopa extends ScopaEngine {
     protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards){
     	return super.countPlayersScores(playerCollectedCards);
     }
+
+    
     public static void main(String... args) {
         LocalScopa localScopa = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
         localScopa.play();

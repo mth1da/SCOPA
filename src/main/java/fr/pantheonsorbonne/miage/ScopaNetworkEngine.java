@@ -11,7 +11,7 @@ import java.util.*;
  * This class implements the scopa with the network engine
  */
 public class ScopaNetworkEngine extends ScopaEngine {
-    private static final int PLAYER_COUNT = 3;
+    private static final int PLAYER_COUNT = 4;
 
     private final HostFacade hostFacade;
     private final Set<String> players;

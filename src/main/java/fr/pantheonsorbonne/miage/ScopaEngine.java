@@ -111,12 +111,6 @@ public abstract class ScopaEngine {
 			System.out.println();
 		}
 		
-		System.out.println("\nHand Cards");
-		for (String currentPlayer : players) {
-			System.out.print("player " + currentPlayer + ": ");
-			getPlayerCards(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
-			System.out.println();
-		}
 		System.out.print("RoundDeck: ");
 		roundDeck.stream().forEach(c -> System.out.print(c.toFancyString()));
 		System.out.println();
@@ -124,7 +118,7 @@ public abstract class ScopaEngine {
 		String winner = getWinner(playerCollectedCards);
 		// send the winner the gameover and leave
 		declareWinner(winner);
-		//System.exit(0);
+		System.exit(0);
 	}
 
 	protected List<Card> getInitialRoundDeck() {
@@ -179,13 +173,36 @@ public abstract class ScopaEngine {
 		return null;
 	}
 
+    /*
+     * making a pair
+     */
 	Card makePair(Queue<Card> playerCards, Queue<Card> roundDeck) {
 	//Card makePair(String player, Queue<Card> roundDeck) {
 		//Queue<Card> playerCards = getPlayerCards(player);
-		Card selectedCard = null;
 
 		// apply 7D strategy
-		for (Card card : roundDeck) {
+		if (settebelloStrategy(playerCards, roundDeck) != null){
+            return settebelloStrategy(playerCards, roundDeck);
+        }
+
+        //apply denier strategy
+        else if (denierStrategy(playerCards, roundDeck) != null){
+            return denierStrategy(playerCards, roundDeck);
+        }
+
+		// apply take max pair strategy
+        else{
+		    return maxStrategy(playerCards, roundDeck);
+        }
+	}
+
+    /*
+     * applying 7D strategy : if there's a settebello in the round deck 
+     * and if the player have a card value of 7
+     * the player will make a pair with its 7 to take the settebello
+     */
+    Card settebelloStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+        for (Card card : roundDeck) {
 			if (card.toString().equals("7D")) {
 				for (Card pcard : playerCards) {
 					if (pcard.getValue().getStringRepresentation().equals("7")) {
@@ -194,9 +211,34 @@ public abstract class ScopaEngine {
 				}
 			}
 		}
+        return null;
+    }
 
-		// apply take max pair strategy
-		int maxValue = 0;
+    /*
+     * applying denier strategy : if there's a card of denier in the round deck 
+     * and if the player have a card value which matches the value of the card of denier
+     * the player will make a pair with this card value to take the denier card
+     */
+    Card denierStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+        for (Card card : roundDeck) {
+			if (card.getColor().toString().equals("D")) {
+				for (Card pcard : playerCards) {
+					if (pcard.getValue().getStringRepresentation().equals(card.getValue().toString())) {
+						return pcard;
+					}
+				}
+			}
+		}
+        return null;
+    }
+
+    /*
+     * applying max pair strategy : if there's no settebello nor a denier card in the round deck
+     * the player will make a pair with the highest card value in the round deck
+     */
+    Card maxStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
+        Card selectedCard=null;
+        int maxValue = 0;
 		for(Card card : playerCards) {
 			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0) {
 				if (card.getValue().getRank() > maxValue) {
@@ -205,8 +247,8 @@ public abstract class ScopaEngine {
 				}
 			}
 		}
-		return selectedCard;
-	}
+        return selectedCard;
+    }
 
 	/**
 	 * provide the list of the initial players to play the game
