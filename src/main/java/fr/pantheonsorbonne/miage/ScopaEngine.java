@@ -221,9 +221,9 @@ public abstract class ScopaEngine {
      */
     Card denierStrategy(Queue<Card> playerCards, Queue<Card> roundDeck){
         for (Card card : roundDeck) {
-			if (card.getColor().toString().equals("D")) {
+			if (card.getColor().name().equals("DIAMOND")) {
 				for (Card pcard : playerCards) {
-					if (pcard.getValue().getStringRepresentation().equals(card.getValue().toString())) {
+					if (pcard.getValue().getStringRepresentation().equals(card.getValue().getStringRepresentation())) {
 						return pcard;
 					}
 				}

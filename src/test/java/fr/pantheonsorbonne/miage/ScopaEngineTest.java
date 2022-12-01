@@ -93,6 +93,95 @@ class ScopaEngineTest {
         assertEquals(carteAttendue, carteObtenue.toString());
     }
 
+    @Test
+    void makePairWithoutSettebelloAndDenierTest() {
+
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+       
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        String carteAttendue = "KS";
+        Card carteObtenue = test.makePair(playerCardsTest, roundDeckTest);
+
+        assertEquals(carteAttendue, carteObtenue.toString());
+    }
+
+    @Test
+    void makingPairWithSettebelloStrategyTest(){
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals("7H", test.settebelloStrategy(playerCardsTest,roundDeckTest).toString());
+    }
+
+    @Test
+    void notMakingPairWithSettebelloStrategyTest(){
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.THREE));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals(null, test.settebelloStrategy(playerCardsTest,roundDeckTest));
+    }
+
+    @Test
+    void makingPairWithDenierStrategyTest(){
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.FIVE));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals("5S", test.denierStrategy(playerCardsTest,roundDeckTest).toString());
+    }
+
+    @Test
+    void notMakingPairWithDenierStrategyTest(){
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals(null, test.denierStrategy(playerCardsTest,roundDeckTest));
+    }
+
+
     /*
      * 
      */
