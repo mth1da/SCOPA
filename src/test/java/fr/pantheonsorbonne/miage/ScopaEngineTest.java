@@ -76,18 +76,18 @@ class ScopaEngineTest {
     @Test
     void makePairTest() {
 
-        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
         roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
-        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.FOUR));
         roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
        
-        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
-        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.CLUB, CardValue.THREE));
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.FOUR));
         playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        String carteAttendue = "7H";
+        String carteAttendue = "4H";
         Card carteObtenue = test.makePair(playerCardsTest, roundDeckTest);
 
         assertEquals(carteAttendue, carteObtenue.toString());
@@ -96,13 +96,13 @@ class ScopaEngineTest {
     @Test
     void makePairWithoutSettebelloAndDenierTest() {
 
-        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
         roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
         roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
         roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
        
-        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
-        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.CLUB, CardValue.THREE));
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.FOUR));
         playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
 
         var test = new LocalScopa(Set.of("Joueur1"));
