@@ -10,9 +10,9 @@ import java.util.Random;
  */
 public class Deck {
 
-    private final static Random random = new Random();
+    //private final static Random random = new Random();
     public static int deckSize = CardValue.values().length * CardColor.values().length;
-    private final static Card[] deck = new Card[deckSize];
+    private static final Card[] deck = new Card[deckSize];
 
     static {
         int cardCount = deckSize;

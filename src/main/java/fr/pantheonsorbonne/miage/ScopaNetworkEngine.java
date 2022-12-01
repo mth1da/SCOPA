@@ -137,14 +137,12 @@ public class ScopaNetworkEngine extends ScopaEngine {
 
     @Override
     protected Queue<Card> getPlayerCards(String playerName) {
-        // TODO Auto-generated method stub
-        return null;
+        return new LinkedList<>();
     }
 
 	@Override
 	protected Map<String, Queue<Card>> allPlayerCards() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<>();
 	}
 
 }
