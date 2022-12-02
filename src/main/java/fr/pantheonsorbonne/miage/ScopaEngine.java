@@ -99,7 +99,7 @@ public abstract class ScopaEngine {
 
 			if (!getPlayerCards(currentPlayer).isEmpty()) {
 				ArrayList<Card> pairCard = makePair(getPlayerCards(currentPlayer), roundDeck);
-				if (pairCard.get(0) != null) {
+				if (!pairCard.isEmpty()) {
 					processPairCard(currentPlayer, pairCard, roundDeck);
 				} else {
 					try {
@@ -305,20 +305,20 @@ public abstract class ScopaEngine {
 	 */
 	ArrayList<Card> maxStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
 		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
-		Card selectedCard = null;
-		int maxValue = 0;
 		Card pcard = null;
+		int maxValue = 0;
+		Card dcard = null;
 		for (Card card : playerCards) {
 			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0
 					&& card.getValue().getRank() > maxValue) {
 				maxValue = card.getValue().getRank();
-				selectedCard = card;
-				//deckcard ?
+				pcard = card;
+				dcard = card;
 			}
-			if(selectedCard != null){
-				PlayerCardDeckCard.add(selectedCard);
+			if(pcard != null && dcard != null){
+				PlayerCardDeckCard.add(pcard);
+				PlayerCardDeckCard.add(dcard);
 			}
-			//PlayerCardDeckCard.add(pcard);
 		}
 		return PlayerCardDeckCard;
 	}
