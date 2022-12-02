@@ -22,53 +22,16 @@ import fr.pantheonsorbonne.miage.enums.CardValue;
 public abstract class ScopaEngine {
 
 	public static final int CARDS_IN_HAND_INITIAL_COUNT = 3;
+	private static final String DENIER = "DIAMOND";
 
 	Map<String, Queue<Card>> playerCollectedCards = new HashMap<>();
 	Map<String, Integer> playerCollectedScopa = new HashMap<>();
 	protected abstract Map<String, Queue<Card>> allPlayerCards();
-	private String DENIER = "DIAMOND";
+	
 
 	/**
 	 * play a scopa with the provided players
 	 */
-
-	void displayPlayerRoundDeckCards(String currentPlayer, Queue<Card> roundDeck) {
-		System.out.print("player " + currentPlayer + ": ");
-		getPlayerCards(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
-		System.out.println();
-		System.out.print("RoundDeck: ");
-		roundDeck.stream().forEach(c -> System.out.print(c.toFancyString()));
-		System.out.println();
-	}
-
-	void processPairCard(String currentPlayer, ArrayList<Card> pairCard,Queue<Card> roundDeck){
-		if(pairCard.get(1) != null){
-			roundDeck.remove(pairCard.get(1));
-			playerCollectedCards.get(currentPlayer).offer(pairCard.get(1));
-		}
-		if(pairCard.get(0) != null){
-			getPlayerCards(currentPlayer).remove(pairCard.get(0));
-			playerCollectedCards.get(currentPlayer).offer(pairCard.get(0));
-		}
-		if (roundDeck.isEmpty()) {
-			int counter = playerCollectedScopa.get(currentPlayer) + 1;
-			playerCollectedScopa.put(currentPlayer, counter);
-		}
-	}
-
-	void addRemainingCardsToCollected(Queue<Card> roundDeck,Queue<String> players ){
-		while (!roundDeck.isEmpty()) {
-			String currentPlayer = players.poll();
-			playerCollectedCards.get(currentPlayer).offer(roundDeck.poll());
-			players.offer(currentPlayer);
-		}
-
-		players.stream().forEach(player -> {
-			playerCollectedCards.get(player).addAll(getPlayerCards(player));
-			getPlayerCards(player).clear();
-		});
-	}
-
 	public void play() {
 		// send the initial hand to every players
 
@@ -92,6 +55,7 @@ public abstract class ScopaEngine {
 			// take the first player form the queue
 			String currentPlayer = players.poll();
 
+			//display each card of all players and of the deck
 			displayPlayerRoundDeckCards(currentPlayer, roundDeck);
 
 			// and put it immediately at the end
@@ -99,8 +63,12 @@ public abstract class ScopaEngine {
 
 			if (!getPlayerCards(currentPlayer).isEmpty()) {
 				ArrayList<Card> pairCard = makePair(getPlayerCards(currentPlayer), roundDeck);
+				//if a pair is possible, 
 				if (!pairCard.isEmpty()) {
+					//processing the pair
 					processPairCard(currentPlayer, pairCard, roundDeck);
+					//processing the scopa point if done
+					processScopaPoint(currentPlayer, roundDeck);
 				} else {
 					try {
 						// apply avoid to put 7D strategy
@@ -113,14 +81,17 @@ public abstract class ScopaEngine {
 				}
 			} else {
 				Card[] cards = Deck.getRandomCards(CARDS_IN_HAND_INITIAL_COUNT);
-				String hand = Card.cardsToString(cards); // changer ça si on utilise pas le string
+				String hand = Card.cardsToString(cards); 
 				giveCardsToPlayer(currentPlayer, hand);
 			}
 
 		}
 
-		addRemainingCardsToCollected(roundDeck,players );
+		//since we've left the loop, the game is over
+		//we give the remaning cards to the last player having played
+		addRemainingCardsToCollected(roundDeck, players);
 
+		//displaying the collected cards of each player
 		System.out.println("Collected Cards");
 		for (String currentPlayer : players) {
 			System.out.print("player " + currentPlayer + ": ");
@@ -128,14 +99,34 @@ public abstract class ScopaEngine {
 			System.out.println();
 		}
 
+		
+		//making sure the round deck is empty
 		System.out.print("RoundDeck: ");
 		roundDeck.stream().forEach(c -> System.out.print(c.toFancyString()));
 		System.out.println();
-		// since we've left the loop, we don't have any cards in the deck
+		
+
 		String winner = getWinner(playerCollectedCards);
 		// send the winner the gameover and leave
 		declareWinner(winner);
 		System.exit(0);
+	}
+
+
+
+	protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards,
+			Map<String, Integer> playerCollectedScopa) {
+		for (String playerName : getInitialPlayers()) {
+			// get random cards
+			Card[] cards = Deck.getRandomCards(CARDS_IN_HAND_INITIAL_COUNT);
+			// transform them to String
+			String hand = Card.cardsToString(cards); // changer ça si on utilise pas le string
+			// send them to this players
+			giveCardsToPlayer(playerName, hand);
+			playerCollectedCards.put(playerName, new LinkedList<>());
+			playerCollectedScopa.put(playerName, 0);
+
+		}
 	}
 
 	protected List<Card> getInitialRoundDeck() {
@@ -163,22 +154,54 @@ public abstract class ScopaEngine {
 		return false;
 	}
 
-	protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards,
-			Map<String, Integer> playerCollectedScopa) {
-		for (String playerName : getInitialPlayers()) {
-			// get random cards
-			Card[] cards = Deck.getRandomCards(CARDS_IN_HAND_INITIAL_COUNT);
-			// transform them to String
-			String hand = Card.cardsToString(cards); // changer ça si on utilise pas le string
-			// send them to this players
-			giveCardsToPlayer(playerName, hand);
-			playerCollectedCards.put(playerName, new LinkedList<>());
-			playerCollectedScopa.put(playerName, 0);
+	/*
+	 * displays the player's cards and the round deck 's cards in a fancy way
+	 */
+	protected void displayPlayerRoundDeckCards(String currentPlayer, Queue<Card> roundDeck) {
+		System.out.print("player " + currentPlayer + ": ");
+		getPlayerCards(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
+		System.out.println();
+		System.out.print("RoundDeck: ");
+		roundDeck.stream().forEach(c -> System.out.print(c.toFancyString()));
+		System.out.println();
+	}
 
+	/*
+	 * processing the cards won by the player by adding them to its collected cards
+	 */
+	protected void processPairCard(String currentPlayer, ArrayList<Card> pairCard, Queue<Card> roundDeck){
+		if(pairCard.get(1) != null){
+			roundDeck.remove(pairCard.get(1));
+			playerCollectedCards.get(currentPlayer).offer(pairCard.get(1));
+		}
+		if(pairCard.get(0) != null){
+			getPlayerCards(currentPlayer).remove(pairCard.get(0));
+			playerCollectedCards.get(currentPlayer).offer(pairCard.get(0));
 		}
 	}
 
-	Card removeRoundDeckCard(Card cardToRemove, Queue<Card> roundDeck) {
+	/*
+	 * determining if the player did a scopa and adding a point to its collected scopa
+	 */
+	protected void processScopaPoint(String currentPlayer, Queue<Card> roundDeck){
+		if (roundDeck.isEmpty()) {
+			int counter = playerCollectedScopa.get(currentPlayer) + 1;
+			playerCollectedScopa.put(currentPlayer, counter);
+		}
+	}
+
+	/*
+	 * adding 
+	 */
+	protected void addRemainingCardsToCollected(Queue<Card> roundDeck,Queue<String> players ){
+		while (!roundDeck.isEmpty()) {
+			String currentPlayer = players.poll();
+			playerCollectedCards.get(currentPlayer).offer(roundDeck.poll());
+			players.offer(currentPlayer);
+		}
+	}
+
+	protected Card removeRoundDeckCard(Card cardToRemove, Queue<Card> roundDeck) {
 		for (Card card : roundDeck) {
 			if (card.equals(cardToRemove)) {
 				roundDeck.remove(card);
@@ -191,25 +214,23 @@ public abstract class ScopaEngine {
 	/*
 	 * making a pair
 	 */
-	ArrayList<Card> makePair(Queue<Card> playerCards, Queue<Card> roundDeck) {
+	protected ArrayList<Card> makePair(Queue<Card> playerCards, Queue<Card> roundDeck) {
 
-		
-
-		// apply 7D strategy
+		// applying 7D strategy
 		if (!settebelloInDeckStrategy(playerCards, roundDeck).isEmpty()) {
 			return settebelloInDeckStrategy(playerCards, roundDeck);
 		} else if (!settebelloInHandStrategy(playerCards, roundDeck).isEmpty()) {
 			return settebelloInHandStrategy(playerCards, roundDeck);
 		}
 
-		// apply denier strategy
+		// applying denier strategy
 		else if (!denierCardInDeckStrategy(playerCards, roundDeck).isEmpty()) {
 			return denierCardInDeckStrategy(playerCards, roundDeck);
 		} else if (!denierCardInHandStrategy(playerCards, roundDeck).isEmpty()) {
 			return denierCardInHandStrategy(playerCards, roundDeck);
 		}
 
-		// apply take max pair strategy
+		// applying max pair strategy
 		else {
 			return maxStrategy(playerCards, roundDeck);
 		}
@@ -222,18 +243,18 @@ public abstract class ScopaEngine {
 	 * the player will make a pair with its 7 to take the settebello
 	 */
 	ArrayList<Card> settebelloInDeckStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
-		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
+		ArrayList<Card> playerCardDeckCard = new ArrayList<>();
 		for (Card card : roundDeck) {
 			if (card.toString().equals("7D")) {
-				for (Card pcard : playerCards) {
-					if (pcard.getValue().getStringRepresentation().equals("7")) {
-						PlayerCardDeckCard.add(pcard);
-						PlayerCardDeckCard.add(card);
+				for (Card playerCard : playerCards) {
+					if (playerCard.getValue().getStringRepresentation().equals("7")) {
+						playerCardDeckCard.add(playerCard);
+						playerCardDeckCard.add(card);
 					}
 				}
 			}
 		}
-		return PlayerCardDeckCard;
+		return playerCardDeckCard;
 	}
 
 	/*
@@ -243,18 +264,18 @@ public abstract class ScopaEngine {
 	 * by doing such, the player secures the settebello to its collected cards
 	 */
 	ArrayList<Card> settebelloInHandStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
-		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
-		for (Card pcard : playerCards) {
-			if (pcard.toString().equals("7D")) {
+		ArrayList<Card> playerCardDeckCard = new ArrayList<>();
+		for (Card playerCard : playerCards) {
+			if (playerCard.toString().equals("7D")) {
 				for (Card card : roundDeck) {
 					if (card.getValue().getStringRepresentation().equals("7")) {
-						PlayerCardDeckCard.add(pcard);
-						PlayerCardDeckCard.add(card);
+						playerCardDeckCard.add(playerCard);
+						playerCardDeckCard.add(card);
 					}
 				}
 			}
 		}
-		return PlayerCardDeckCard;
+		return playerCardDeckCard;
 	}
 
 	/*
@@ -263,18 +284,18 @@ public abstract class ScopaEngine {
 	 * the player will make a pair with this card to take the denier card
 	 */
 	ArrayList<Card> denierCardInDeckStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
-		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
+		ArrayList<Card> playerCardDeckCard = new ArrayList<>();
 		for (Card card : roundDeck) {
 			if (card.getColor().name().equals(DENIER)) {
-				for (Card pcard : playerCards) {
-					if (pcard.getValue().getStringRepresentation().equals(card.getValue().getStringRepresentation())) {
-						PlayerCardDeckCard.add(pcard);
-						PlayerCardDeckCard.add(card);
+				for (Card playerCard : playerCards) {
+					if (playerCard.getValue().getStringRepresentation().equals(card.getValue().getStringRepresentation())) {
+						playerCardDeckCard.add(playerCard);
+						playerCardDeckCard.add(card);
 					}
 				}
 			}
 		}
-		return PlayerCardDeckCard;
+		return playerCardDeckCard;
 	}
 
 	/*
@@ -284,18 +305,18 @@ public abstract class ScopaEngine {
 	 * the player will make a pair with this card to secure its denier card
 	 */
 	ArrayList<Card> denierCardInHandStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
-		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
-		for (Card pcard : playerCards) {
-			if (pcard.getColor().name().equals(DENIER)) {
+		ArrayList<Card> playerCardDeckCard = new ArrayList<>();
+		for (Card playerCard : playerCards) {
+			if (playerCard.getColor().name().equals(DENIER)) {
 				for (Card card : roundDeck) {
-					if (card.getValue().getStringRepresentation().equals(pcard.getValue().getStringRepresentation())) {
-						PlayerCardDeckCard.add(pcard);
-						PlayerCardDeckCard.add(card);
+					if (card.getValue().getStringRepresentation().equals(playerCard.getValue().getStringRepresentation())) {
+						playerCardDeckCard.add(playerCard);
+						playerCardDeckCard.add(card);
 					}
 				}
 			}
 		}
-		return PlayerCardDeckCard;
+		return playerCardDeckCard;
 	}
 
 	/*
@@ -304,23 +325,23 @@ public abstract class ScopaEngine {
 	 * the player will make a pair with the highest card value in the round deck
 	 */
 	ArrayList<Card> maxStrategy(Queue<Card> playerCards, Queue<Card> roundDeck) {
-		ArrayList<Card> PlayerCardDeckCard = new ArrayList<>();
-		Card pcard = null;
+		ArrayList<Card> playerCardDeckCard = new ArrayList<>();
+		Card playerCard = null;
 		int maxValue = 0;
-		Card dcard = null;
+		Card deckCard = null;
 		for (Card card : playerCards) {
 			if (roundDeck.stream().map(crd -> crd.getValue()).filter(val -> val.equals(card.getValue())).count() > 0
 					&& card.getValue().getRank() > maxValue) {
 				maxValue = card.getValue().getRank();
-				pcard = card;
-				dcard = card;
+				playerCard = card;
+				deckCard = card;
 			}
-			if(pcard != null && dcard != null){
-				PlayerCardDeckCard.add(pcard);
-				PlayerCardDeckCard.add(dcard);
+			if(playerCard != null && deckCard != null){
+				playerCardDeckCard.add(playerCard);
+				playerCardDeckCard.add(deckCard);
 			}
 		}
-		return PlayerCardDeckCard;
+		return playerCardDeckCard;
 	}
 
 	/**
