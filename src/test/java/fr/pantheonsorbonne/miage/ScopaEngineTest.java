@@ -88,9 +88,26 @@ class ScopaEngineTest {
         var test = new LocalScopa(Set.of("Joueur1"));
 
         String carteAttendue = "4H";
-        Card carteObtenue = test.makePair(playerCardsTest, roundDeckTest);
+        Card carteObtenue = (test.makePair(playerCardsTest, roundDeckTest)).get(0);
 
         assertEquals(carteAttendue, carteObtenue.toString());
+    }
+
+    @Test
+    void cantMakePairTest() {
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.FOUR));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+       
+        playerCardsTest.add(new Card(CardColor.CLUB, CardValue.THREE));
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.QUEEN));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.KING));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals(true, test.makePair(playerCardsTest, roundDeckTest).isEmpty());
     }
 
     @Test
@@ -108,7 +125,7 @@ class ScopaEngineTest {
         var test = new LocalScopa(Set.of("Joueur1"));
 
         String carteAttendue = "KS";
-        Card carteObtenue = test.makePair(playerCardsTest, roundDeckTest);
+        Card carteObtenue = test.makePair(playerCardsTest, roundDeckTest).get(0);
 
         assertEquals(carteAttendue, carteObtenue.toString());
     }
@@ -130,7 +147,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals("7H", test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest).toString());
+        assertEquals("7H", test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
 
     @Test
@@ -147,7 +164,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals(null, test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest));
+        assertEquals(true, test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
 
     /*
@@ -167,7 +184,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals("7D", test.settebelloInHandStrategy(playerCardsTest,roundDeckTest).toString());
+        assertEquals("7D", test.settebelloInHandStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
 
     @Test
@@ -184,7 +201,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals(null, test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest));
+        assertEquals(true, test.settebelloInDeckStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
 
     /*
@@ -204,7 +221,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals("5S", test.denierCardInDeckStrategy(playerCardsTest,roundDeckTest).toString());
+        assertEquals("5S", test.denierCardInDeckStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
 
     @Test
@@ -221,7 +238,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals(null, test.denierCardInDeckStrategy(playerCardsTest,roundDeckTest));
+        assertEquals(true, test.denierCardInDeckStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
 
     /*
@@ -241,7 +258,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals("1D", test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).toString());
+        assertEquals("1D", test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
 
     @Test
@@ -258,7 +275,7 @@ class ScopaEngineTest {
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        assertEquals(null, test.denierCardInHandStrategy(playerCardsTest,roundDeckTest));
+        assertEquals(true, test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
 
     /*
@@ -266,23 +283,38 @@ class ScopaEngineTest {
      */
     @Test
     void removeRoundDeckCardTest(){
+
+        Card matchCardTest = new Card(CardColor.SPADE, CardValue.SIX);
         
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+        roundDeckTest.add(matchCardTest);
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals(matchCardTest, test.removeRoundDeckCard(matchCardTest, roundDeckTest));
+
+    }   
+
+    @Test
+    void removeRoundDeckNullTest(){
+
         roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
         roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
         roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
         roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
 
-        Card matchCardTest = new Card(CardColor.DIAMOND, CardValue.SEVEN);
+        Card matchCardTest = new Card(CardColor.DIAMOND, CardValue.FIVE);
 
         var test = new LocalScopa(Set.of("Joueur1"));
 
-        String carteAttendue = "7D";
+        Card carteAttendue = null;
         Card carteObtenue = test.removeRoundDeckCard(matchCardTest, roundDeckTest);
 
-        assertEquals(carteAttendue, carteObtenue.toString());
+        assertEquals(carteAttendue, carteObtenue);
 
-    }   
-
+    }
     /*
      * tests on bestCount method
      */
