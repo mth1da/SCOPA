@@ -61,6 +61,8 @@ public abstract class ScopaEngine {
 			// and put it immediately at the end
 			players.offer(currentPlayer);
 
+			
+
 			if (!getPlayerCards(currentPlayer).isEmpty()) {
 				ArrayList<Card> pairCard = makePair(getPlayerCards(currentPlayer), roundDeck);
 				//if a pair is possible, 
@@ -98,6 +100,14 @@ public abstract class ScopaEngine {
 			playerCollectedCards.get(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
 			System.out.println();
 		}
+
+		int count=0;
+		for (String currentPlayer : players){
+			for (Card currCard : playerCollectedCards.get(currentPlayer)){
+				count++;
+			}
+		}
+		System.out.println("nb cartes : " +count);
 
 		
 		//making sure the round deck is empty
