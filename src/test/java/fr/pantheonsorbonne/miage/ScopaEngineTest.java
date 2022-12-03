@@ -13,6 +13,7 @@ class ScopaEngineTest {
     Queue<Card> initialRoundDeckTest = new LinkedList<>();
     Queue<Card> roundDeckTest = new LinkedList<>();
     Queue<Card> playerCardsTest = new LinkedList<>();
+    ArrayList<Card> pairCardsTest = new ArrayList<>();
     Map<String, Queue<Card>> playerCollectedCardsTest = new HashMap<>();
     Queue<Card> J1collectedCards = new LinkedList<>();
     Queue<Card> J2collectedCards = new LinkedList<>();
@@ -278,8 +279,28 @@ class ScopaEngineTest {
         assertEquals(true, test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
 
+    @Test
+    void processPairCardsTest(){
+
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.TWO));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        //the player's selected card
+        pairCardsTest.add(new Card(CardColor.HEART, CardValue.TWO));
+        //the pair of the deck
+        pairCardsTest.add(new Card(CardColor.SPADE, CardValue.TWO));
+        
+        var test = new LocalScopa(Set.of("Joueur1"));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.TWO));
+        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
+
+        assertEquals(J1collectedCards, test.processPairCards("Joueur1", pairCardsTest, roundDeckTest));
+    }
+
     /*
-     * 
+     *  A SUPPRIMER 
      */
     @Test
     void removeRoundDeckCardTest(){
@@ -297,6 +318,7 @@ class ScopaEngineTest {
 
     }   
 
+    // A SUPP
     @Test
     void removeRoundDeckNullTest(){
 
