@@ -13,6 +13,7 @@ public class Deck {
     //private final static Random random = new Random();
     public static int deckSize = CardValue.values().length * CardColor.values().length;
     private static final Card[] deck = new Card[deckSize];
+    private static Random random=new Random();
 
     static {
         int cardCount = deckSize;
@@ -23,14 +24,15 @@ public class Deck {
             }
         }
         //shuffle them
-        /*
+        
         for (int i = 0; i < deckSize; i++) {
             int randomIndexToSwap = random.nextInt(deckSize);
+            System.out.println(randomIndexToSwap);
             Card temp = deck[randomIndexToSwap];
             deck[randomIndexToSwap] = deck[i];
             deck[i] = temp;
 
-        }*/
+        }
     }
 
     /**

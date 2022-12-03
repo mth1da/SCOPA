@@ -36,7 +36,7 @@ public abstract class ScopaEngine {
 		// send the initial hand to every players
 
 		giveInitialHandToPLayers(playerCollectedCards, playerCollectedScopa);
-
+		initCollectedAndScopaCards();
 		Queue<Card> roundDeck = new LinkedList<>(); // la table du jeu
 		do {
 			roundDeck.addAll(getInitialRoundDeck());
@@ -50,8 +50,8 @@ public abstract class ScopaEngine {
 		}
 
 		// repeat until there are no more cards in deck
-		while (Deck.deckSize > 1) {
-
+		while (Deck.deckSize > 1 || !notCardsWithPlayers()) {
+			printCardStat(roundDeck);
 			// take the first player form the queue
 			String currentPlayer = players.poll();
 
@@ -82,17 +82,18 @@ public abstract class ScopaEngine {
 					}
 				}
 			} else {
+				
 				Card[] cards = Deck.getRandomCards(CARDS_IN_HAND_INITIAL_COUNT);
 				String hand = Card.cardsToString(cards); 
 				giveCardsToPlayer(currentPlayer, hand);
 			}
 
 		}
-
+		printCardStat(roundDeck);
 		//since we've left the loop, the game is over
 		//we give the remaning cards to the last player having played
 		addRemainingCardsToCollected(roundDeck, players);
-
+		
 		//displaying the collected cards of each player
 		System.out.println("Collected Cards");
 		for (String currentPlayer : players) {
@@ -100,15 +101,13 @@ public abstract class ScopaEngine {
 			playerCollectedCards.get(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
 			System.out.println();
 		}
-
+		
 		int count=0;
-		for (String currentPlayer : players){
-			for (Card currCard : playerCollectedCards.get(currentPlayer)){
-				count++;
-			}
+		for (String currentPlayer : getInitialPlayers()){
+			count=count+ playerCollectedCards.get(currentPlayer).size();
 		}
 		System.out.println("nb cartes : " +count);
-
+		
 		
 		//making sure the round deck is empty
 		System.out.print("RoundDeck: ");
@@ -123,7 +122,28 @@ public abstract class ScopaEngine {
 	}
 
 
-
+	private boolean notCardsWithPlayers() {
+		int count=0;
+		for(String player:getInitialPlayers()) {
+			count=count+getPlayerCards(player).size();
+		}	
+		return count==0;
+	}
+	
+	protected void printCardStat(Queue<Card> roundDeck) {
+		int count=roundDeck.size()+Deck.deckSize;
+		System.out.println("roundDeck: "+roundDeck.size());
+		System.out.println("Deck: "+Deck.deckSize);
+		for(String player:getInitialPlayers()) {
+			count=count+getPlayerCards(player).size()+playerCollectedCards.get(player).size();
+			System.out.println("Player "+player+": "+getPlayerCards(player).size());
+			System.out.println("Player Collected "+player+": "+playerCollectedCards.get(player).size());
+		}
+		
+		System.out.println("*********************\n"+count+"*********************\n");
+		
+	}
+	
 	protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa) {
 		for (String playerName : getInitialPlayers()) {
 			// get random cards
@@ -132,10 +152,15 @@ public abstract class ScopaEngine {
 			String hand = Card.cardsToString(cards); // changer ça si on utilise pas le string
 			// send them to this players
 			giveCardsToPlayer(playerName, hand);
-			playerCollectedCards.put(playerName, new LinkedList<>());
-			playerCollectedScopa.put(playerName, 0);
 
 		}
+	}
+	
+	protected  void initCollectedAndScopaCards() {
+		for (String playerName : getInitialPlayers()) {
+			playerCollectedCards.put(playerName, new LinkedList<>());
+			playerCollectedScopa.put(playerName, 0);
+		}	
 	}
 
 	protected List<Card> getInitialRoundDeck() {
@@ -225,6 +250,7 @@ public abstract class ScopaEngine {
 					if (playerCard.getValue().getStringRepresentation().equals("7")) {
 						playerCardDeckCard.add(playerCard);
 						playerCardDeckCard.add(card);
+						return playerCardDeckCard; // recently fixed
 					}
 				}
 			}
@@ -246,6 +272,7 @@ public abstract class ScopaEngine {
 					if (card.getValue().getStringRepresentation().equals("7")) {
 						playerCardDeckCard.add(playerCard);
 						playerCardDeckCard.add(card);
+						return playerCardDeckCard;// recently fixed
 					}
 				}
 			}
@@ -266,6 +293,7 @@ public abstract class ScopaEngine {
 					if (playerCard.getValue().getStringRepresentation().equals(card.getValue().getStringRepresentation())) {
 						playerCardDeckCard.add(playerCard);
 						playerCardDeckCard.add(card);
+						return playerCardDeckCard;//recently fixed
 					}
 				}
 			}
@@ -287,6 +315,7 @@ public abstract class ScopaEngine {
 					if (card.getValue().getStringRepresentation().equals(playerCard.getValue().getStringRepresentation())) {
 						playerCardDeckCard.add(playerCard);
 						playerCardDeckCard.add(card);
+						return playerCardDeckCard;//recently fixed
 					}
 				}
 			}
@@ -306,6 +335,7 @@ public abstract class ScopaEngine {
 				if (deckCard.getValue().getStringRepresentation().equals(playerCard.getValue().getStringRepresentation())) {
 					playerCardDeckCard.add(playerCard);
 					playerCardDeckCard.add(deckCard);
+					return playerCardDeckCard;//recently fixed
 				}
 			}
 		}
@@ -316,6 +346,7 @@ public abstract class ScopaEngine {
 	 * processing the cards won by the player by adding them to its collected cards
 	 */
 	protected Map<String, Queue<Card>> processPairCards(String currentPlayer, ArrayList<Card> pairCards, Queue<Card> roundDeck){
+		
 		if(pairCards.get(1) != null){
 			// PB : "Cannot invoke "java.util.Queue.offer(Object)" because the return value of "java.util.Map.get(Object)" is null"
 			// on parle du playerCollectedCards.get(currentPlayer)
@@ -326,7 +357,7 @@ public abstract class ScopaEngine {
 		}
 		if(pairCards.get(0) != null){
 			playerCollectedCards.get(currentPlayer).offer(pairCards.get(0));
-			roundDeck.remove(pairCards.get(0));
+			getPlayerCards(currentPlayer).remove(pairCards.get(0));
 			
 		}
 		return playerCollectedCards;

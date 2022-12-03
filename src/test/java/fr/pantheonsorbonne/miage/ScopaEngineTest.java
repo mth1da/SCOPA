@@ -2,11 +2,17 @@ package fr.pantheonsorbonne.miage;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.Lists;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import fr.pantheonsorbonne.miage.AppTest.LocalScopaTest;
 import fr.pantheonsorbonne.miage.enums.CardColor;
 import fr.pantheonsorbonne.miage.enums.CardValue;
 import fr.pantheonsorbonne.miage.game.Card;
+import fr.pantheonsorbonne.miage.game.Deck;
 
 class ScopaEngineTest {
 
@@ -110,6 +116,8 @@ class ScopaEngineTest {
 
         assertEquals(true, test.makePair(playerCardsTest, roundDeckTest).isEmpty());
     }
+    
+    
 
     @Test
     void makePairWithoutSettebelloAndDenierTest() {
@@ -278,10 +286,29 @@ class ScopaEngineTest {
 
         assertEquals(true, test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).isEmpty());
     }
+    
+    /*
+    @Test
+    public void shouldAnswerWithTrue() {
+ 
+        Card[] cardsJ1 = new Card[]{new Card(CardColor.DIAMOND, CardValue.ACE),new Card(CardColor.DIAMOND, CardValue.ACE), new Card(CardColor.DIAMOND, CardValue.SEVEN)};
+        Card[] cardsJ2 = new Card[]{ new Card(CardColor.DIAMOND, CardValue.FIVE)};
+        Deck.getRandomCards(40);
+        LocalScopaTest localScopaTest = new LocalScopaTest(
+
+        Arrays.stream((new String[]{"J1", "J2"})).collect(Collectors.toSet()), Map.of("J1", cardsJ1, "J2", cardsJ2), Lists.newArrayList(new Card(CardColor.SPADE, CardValue.SEVEN)));
+        localScopaTest.play();
+
+        Map<String, Integer> scores=localScopaTest.countPlayersScores(localScopaTest.playerCollectedCards);
+        System.out.println("Scores are:"+scores);
+        
+    }*/
 
     @Test
     void processPairCardsTest(){
 
+    	 Card[] cardsJ2 = new Card[]{ new Card(CardColor.HEART, CardValue.TWO),new Card(CardColor.SPADE, CardValue.TWO)};
+    	 
         roundDeckTest.add(new Card(CardColor.SPADE, CardValue.TWO));
         roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
         roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
@@ -293,6 +320,7 @@ class ScopaEngineTest {
         pairCardsTest.add(new Card(CardColor.SPADE, CardValue.TWO));
         
         var test = new LocalScopa(Set.of("Joueur1"));
+        test.initCollectedAndScopaCards();
         J1collectedCards.add(new Card(CardColor.HEART, CardValue.TWO));
         J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
 
