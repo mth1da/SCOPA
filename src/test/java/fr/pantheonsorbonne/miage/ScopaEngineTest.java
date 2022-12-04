@@ -306,8 +306,6 @@ class ScopaEngineTest {
 
     @Test
     void processPairCardsTest(){
-
-    	 Card[] cardsJ2 = new Card[]{ new Card(CardColor.HEART, CardValue.TWO),new Card(CardColor.SPADE, CardValue.TWO)};
     	 
         roundDeckTest.add(new Card(CardColor.SPADE, CardValue.TWO));
         roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
@@ -321,50 +319,14 @@ class ScopaEngineTest {
         
         var test = new LocalScopa(Set.of("Joueur1"));
         test.initCollectedAndScopaCards();
-        J1collectedCards.add(new Card(CardColor.HEART, CardValue.TWO));
         J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.TWO));
 
-        assertEquals(J1collectedCards, test.processPairCards("Joueur1", pairCardsTest, roundDeckTest));
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+
+        assertEquals(playerCollectedCardsTest.get("Joueur1").toString(), test.processPairCards("Joueur1", pairCardsTest, roundDeckTest).get("Joueur1").toString());
     }
 
-    /*
-     *  A SUPPRIMER 
-     */
-    @Test
-    void removeRoundDeckCardTest(){
-
-        Card matchCardTest = new Card(CardColor.SPADE, CardValue.SIX);
-        
-        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.SEVEN));
-        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
-        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
-        roundDeckTest.add(matchCardTest);
-
-        var test = new LocalScopa(Set.of("Joueur1"));
-
-        assertEquals(matchCardTest, test.removeRoundDeckCard(matchCardTest, roundDeckTest));
-
-    }   
-
-    // A SUPP
-    @Test
-    void removeRoundDeckNullTest(){
-
-        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
-        roundDeckTest.add(new Card(CardColor.HEART, CardValue.ACE));
-        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
-        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
-
-        Card matchCardTest = new Card(CardColor.DIAMOND, CardValue.FIVE);
-
-        var test = new LocalScopa(Set.of("Joueur1"));
-
-        Card carteAttendue = null;
-        Card carteObtenue = test.removeRoundDeckCard(matchCardTest, roundDeckTest);
-
-        assertEquals(carteAttendue, carteObtenue);
-
-    }
     /*
      * tests on bestCount method
      */

@@ -33,7 +33,7 @@ public class AppTest {
         }
 
         @Override
-        protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa) {
+        protected void giveInitialHandToPLayers() {
             for (String playerName : getInitialPlayers()) {
                 //get random cards
                 Card[] cards = affectedCards.get(playerName);
@@ -41,8 +41,8 @@ public class AppTest {
                 String hand = Card.cardsToString(cards);  //changer ça si on utilise pas le string
                 //send them to this players
                 giveCardsToPlayer(playerName, hand);
-                playerCollectedCards.put(playerName, new LinkedList<>());
-                playerCollectedScopa.put(playerName, 0);
+                //playerCollectedCards.put(playerName, new LinkedList<>());
+                //playerCollectedScopa.put(playerName, 0);
             }
         }
     }

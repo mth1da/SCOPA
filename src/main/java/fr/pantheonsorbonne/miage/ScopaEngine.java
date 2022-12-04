@@ -33,11 +33,15 @@ public abstract class ScopaEngine {
 	 * play a scopa with the provided players
 	 */
 	public void play() {
-		// send the initial hand to every players
 
-		giveInitialHandToPLayers(playerCollectedCards, playerCollectedScopa);
+		// send the initial hand to every players
+		giveInitialHandToPLayers();
+
+		// set the initial collected cards and scopa of each players
 		initCollectedAndScopaCards();
-		Queue<Card> roundDeck = new LinkedList<>(); // la table du jeu
+
+		// set the initial round deck and make sure there aren't 3 or more cards of the same value
+		Queue<Card> roundDeck = new LinkedList<>();
 		do {
 			roundDeck.addAll(getInitialRoundDeck());
 		} while (checkOverThreeSameCardValue(roundDeck));
@@ -49,9 +53,12 @@ public abstract class ScopaEngine {
 			players.offer(players.poll());
 		}
 
-		// repeat until there are no more cards in deck
-		while (Deck.deckSize > 1 || !notCardsWithPlayers()) {
+		// repeat until there are no more cards in deck and until the players don't have any cards left to play
+		while (Deck.deckSize > 1 || !noCardsWithPlayers()) {
+
+			//a supp
 			printCardStat(roundDeck);
+
 			// take the first player form the queue
 			String currentPlayer = players.poll();
 
@@ -61,7 +68,6 @@ public abstract class ScopaEngine {
 			// and put it immediately at the end
 			players.offer(currentPlayer);
 
-			
 
 			if (!getPlayerCards(currentPlayer).isEmpty()) {
 				ArrayList<Card> pairCards = makePair(getPlayerCards(currentPlayer), roundDeck);
@@ -89,62 +95,37 @@ public abstract class ScopaEngine {
 			}
 
 		}
+		//A SUPPRIMER
 		printCardStat(roundDeck);
+
 		//since we've left the loop, the game is over
 		//we give the remaning cards to the last player having played
 		addRemainingCardsToCollected(roundDeck, players);
 		
 		//displaying the collected cards of each player
-		System.out.println("Collected Cards");
-		for (String currentPlayer : players) {
-			System.out.print("player " + currentPlayer + ": ");
-			playerCollectedCards.get(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
-			System.out.println();
-		}
+		displayPlayerCollectedCards(players);
 		
+		// A SUPPRIMER
 		int count=0;
 		for (String currentPlayer : getInitialPlayers()){
 			count=count+ playerCollectedCards.get(currentPlayer).size();
 		}
 		System.out.println("nb cartes : " +count);
 		
-		
 		//making sure the round deck is empty
 		System.out.print("RoundDeck: ");
 		roundDeck.stream().forEach(c -> System.out.print(c.toFancyString()));
 		System.out.println();
 		
-
+		//get the winner
 		String winner = getWinner(playerCollectedCards);
+
 		// send the winner the gameover and leave
 		declareWinner(winner);
 		System.exit(0);
 	}
-
-
-	private boolean notCardsWithPlayers() {
-		int count=0;
-		for(String player:getInitialPlayers()) {
-			count=count+getPlayerCards(player).size();
-		}	
-		return count==0;
-	}
 	
-	protected void printCardStat(Queue<Card> roundDeck) {
-		int count=roundDeck.size()+Deck.deckSize;
-		System.out.println("roundDeck: "+roundDeck.size());
-		System.out.println("Deck: "+Deck.deckSize);
-		for(String player:getInitialPlayers()) {
-			count=count+getPlayerCards(player).size()+playerCollectedCards.get(player).size();
-			System.out.println("Player "+player+": "+getPlayerCards(player).size());
-			System.out.println("Player Collected "+player+": "+playerCollectedCards.get(player).size());
-		}
-		
-		System.out.println("*********************\n"+count+"*********************\n");
-		
-	}
-	
-	protected void giveInitialHandToPLayers(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa) {
+	protected void giveInitialHandToPLayers() {
 		for (String playerName : getInitialPlayers()) {
 			// get random cards
 			Card[] cards = Deck.getRandomCards(CARDS_IN_HAND_INITIAL_COUNT);
@@ -188,6 +169,29 @@ public abstract class ScopaEngine {
 		return false;
 	}
 
+	private boolean noCardsWithPlayers() {
+		int count=0;
+		for(String player:getInitialPlayers()) {
+			count=count+getPlayerCards(player).size();
+		}	
+		return count==0;
+	}
+
+	//A SUPPRIMER
+	protected void printCardStat(Queue<Card> roundDeck) {
+		int count=roundDeck.size()+Deck.deckSize;
+		System.out.println("roundDeck: "+roundDeck.size());
+		System.out.println("Deck: "+Deck.deckSize);
+		for(String player:getInitialPlayers()) {
+			count=count+getPlayerCards(player).size()+playerCollectedCards.get(player).size();
+			System.out.println("Player "+player+": "+getPlayerCards(player).size());
+			System.out.println("Player Collected "+player+": "+playerCollectedCards.get(player).size());
+		}
+		
+		System.out.println("*********************\n"+count+"*********************\n");
+		
+	}
+
 	/*
 	 * displays the player's cards and the round deck 's cards in a fancy way
 	 */
@@ -200,16 +204,13 @@ public abstract class ScopaEngine {
 		System.out.println();
 	}
 
-	//A SUPPRIEMR
-	protected Card removeRoundDeckCard(Card cardToRemove, Queue<Card> roundDeck) {
-		for (Card card : roundDeck) {
-			if (card.equals(cardToRemove)) {
-				roundDeck.remove(card);
-				return cardToRemove;
-			}
-		}
-		return null;
-	}
+	/**
+	 * get all cards of a player
+	 * 
+	 * @param playerName
+	 * @return all cards of a player
+	 */
+	protected abstract Queue<Card> getPlayerCards(String playerName);
 
 	/*
 	 * making a pair
@@ -377,7 +378,7 @@ public abstract class ScopaEngine {
 	/*
 	 * adding 
 	 */
-	protected Map<String, Queue<Card>> addRemainingCardsToCollected(Queue<Card> roundDeck,Queue<String> players ){
+	protected Map<String, Queue<Card>> addRemainingCardsToCollected(Queue<Card> roundDeck,Queue<String> players){
 		while (!roundDeck.isEmpty()) {
 			String currentPlayer = players.poll();
 			playerCollectedCards.get(currentPlayer).offer(roundDeck.poll());
@@ -386,48 +387,29 @@ public abstract class ScopaEngine {
 		return playerCollectedCards;
 	}
 
-
 	/**
-	 * provide the list of the initial players to play the game
-	 *
-	 * @return
+	 * display the collected cards of each players
+	 * @param players
 	 */
-	protected abstract Set<String> getInitialPlayers();
-
-	protected abstract Queue<Card> getPlayerCards(String playerName);
-
-	/**
-	 * give some card to a player
-	 *
-	 * @param playerName the player that will receive the cards
-	 * @param hand       the cards as a string (to be converted later)
-	 */
-	protected abstract void giveCardsToPlayer(String playerName, String hand);
+	protected void displayPlayerCollectedCards(Queue<String> players){
+		System.out.println("Collected Cards");
+		for (String currentPlayer : players) {
+			System.out.print("player " + currentPlayer + ": ");
+			playerCollectedCards.get(currentPlayer).stream().forEach(c -> System.out.print(c.toFancyString()));
+			System.out.println();
+		}
+	}
 
 	/**
-	 * get a card from a player. If the player doesn't have a card, it will be
-	 * declared loser and all the left over cards will be given to his opponent
-	 *
-	 * @param leftOverCard               card left over from another round
-	 * @param cardProviderPlayer         the player that should give a card
-	 * @param cardProviderPlayerOpponent the Opponent of this player
-	 * @return a card of null if player cardProviderPlayer is gameover
-	 */
-	protected abstract Card getCardOrGameOver(Collection<Card> leftOverCard, String cardProviderPlayer,
-			String cardProviderPlayerOpponent);
-
-	/**
-	 * give the winner of a round
-	 *
-	 * @param contestantA     a contestant
-	 * @param contestantB     another contestant
-	 * @param contestantACard its card
-	 * @param contestantBCard its card
-	 * @return the name of the winner or null if it's a tie
+	 * give the winner of the game
+	 * 
+	 * @param playerCollectedCards all cards collected by each player
+	 * @return the name of the winner or nobody if it's a tie
 	 */
 	protected String getWinner(Map<String, Queue<Card>> playerCollectedCards) {
 		int maxCount = 0;
 		String winner = "";
+		//count the 
 		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
 		for (Map.Entry<String, Integer> player : playersScores.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
@@ -435,7 +417,6 @@ public abstract class ScopaEngine {
 				maxCount = player.getValue();
 				winner = player.getKey();
 			}
-			// faire condition si 2 gagnants
 			else if (player.getValue() == maxCount) {
 				winner = "nobody";
 			}
@@ -446,11 +427,11 @@ public abstract class ScopaEngine {
 	/**
 	 * gives the score of each player
 	 *
-	 * @param playerCollectedCards
-	 * @return a map of the players associated with their score
+	 * @param playerCollectedCards all cards collected by each player
+	 * @return playersScores a map of the players associated with their score
 	 */
 	protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
-		Map<String, Integer> playerScore = new HashMap<>();
+		Map<String, Integer> playersScores = new HashMap<>();
 		for (Map.Entry<String, Queue<Card>> player : playerCollectedCards.entrySet()) {
 			int count = 0;
 			ArrayList<String> bestCountPlayers = bestCount(playerCollectedCards);
@@ -468,26 +449,27 @@ public abstract class ScopaEngine {
 			if (player.getKey().equals(havingSettebello(playerCollectedCards))) {
 				count++;
 			}
-			playerScore.put(player.getKey(), count);
+			playersScores.put(player.getKey(), count);
 		}
-		return playerScore;
+		return playersScores;
 	}
 
 	/**
-	 * gives the name of the player having the most pairs at the end of the game;
-	 * null if 2 players have the same count
+	 * gives the name[s] of the player[s] having the most pairs at the end of the game;
 	 *
-	 * @param playerCollectedCards
-	 * @return name of the player or null
+	 * @param playerCollectedCards a map of all cards collected by each player
+	 * @return bestPlayers a list of name[s] of the best player[s]
 	 */
 	ArrayList<String> bestCount(Map<String, Queue<Card>> playerCollectedCards) {
+		//determining the highest number of cards collected by a player
 		int maxcount = 0;
-		ArrayList<String> bestPlayers = new ArrayList<>();
 		for (String player : playerCollectedCards.keySet()) {
 			if (playerCollectedCards.get(player).size() > maxcount) {
 				maxcount = playerCollectedCards.get(player).size();
 			}
 		}
+		//setting the best players[s] thanks to the maxcount
+		ArrayList<String> bestPlayers = new ArrayList<>();
 		for (String player : playerCollectedCards.keySet()) {
 			if (playerCollectedCards.get(player).size() == maxcount) {
 				bestPlayers.add(player);
@@ -539,20 +521,52 @@ public abstract class ScopaEngine {
 		return null;
 	}
 
-	// not used for now
+	/**
+	 * this method must be called when a winner is identified
+	 * send the winner the gameover
+	 *
+	 * @param winner the winner
+	 * 
+	 */
+	protected abstract void declareWinner(String winner);
+
+
+	/**
+	 * provide the list of the initial players to play the game
+	 *
+	 * @return
+	 */
+	protected abstract Set<String> getInitialPlayers();
+
+	/**
+	 * give some card to a player
+	 *
+	 * @param playerName the player that will receive the cards
+	 * @param hand       the cards as a string (to be converted later)
+	 */
+	protected abstract void giveCardsToPlayer(String playerName, String hand);
+
+	/**
+	 * get a card from a player. If the player doesn't have a card, it will be
+	 * declared loser and all the left over cards will be given to his opponent
+	 *
+	 * @param leftOverCard               card left over from another round
+	 * @param cardProviderPlayer         the player that should give a card
+	 * @param cardProviderPlayerOpponent the Opponent of this player
+	 * @return a card of null if player cardProviderPlayer is gameover
+	 */
+	protected abstract Card getCardOrGameOver(Collection<Card> leftOverCard, String cardProviderPlayer,
+			String cardProviderPlayerOpponent);
+
+	
+
+	// not used for now A SUPPRIMER
 	protected void getCountPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
-		Map<String, Integer> playerScore = countPlayersScores(playerCollectedCards);
-		for (Map.Entry<String, Integer> player : playerScore.entrySet()) {
+		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
+		for (Map.Entry<String, Integer> player : playersScores.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
 		}
 	}
-
-	/**
-	 * this method must be called when a winner is identified
-	 *
-	 * @param winner the final winner of the same
-	 */
-	protected abstract void declareWinner(String winner);
 
 	/**
 	 * give some card to a player
