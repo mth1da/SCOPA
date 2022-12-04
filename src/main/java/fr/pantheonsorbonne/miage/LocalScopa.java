@@ -29,8 +29,8 @@ public class LocalScopa extends ScopaEngine {
     }
 
     @Override
-    protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards){
-    	return super.countPlayersScores(playerCollectedCards);
+    protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa){
+    	return super.countPlayersScores(playerCollectedCards, playerCollectedScopa);
     }
 
 

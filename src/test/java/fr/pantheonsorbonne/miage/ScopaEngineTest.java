@@ -234,6 +234,7 @@ class ScopaEngineTest {
         assertEquals("5S", test.denierCardInDeckStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
 
+
     @Test
     void cantMakePairWithDenierInDeckStrategyTest(){
 
@@ -286,6 +287,23 @@ class ScopaEngineTest {
         var test = new LocalScopa(Set.of("Joueur1"));
 
         assertEquals(true, test.denierCardInHandStrategy(playerCardsTest,roundDeckTest).isEmpty());
+    }
+
+    @Test
+    void noStrategyTest(){
+
+        roundDeckTest.add(new Card(CardColor.HEART, CardValue.TWO));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        playerCardsTest.add(new Card(CardColor.HEART, CardValue.SIX));
+        playerCardsTest.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        playerCardsTest.add(new Card(CardColor.SPADE, CardValue.TWO));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+
+        assertEquals("6H", test.noStrategy(playerCardsTest,roundDeckTest).get(0).toString());
     }
     
     /*
@@ -584,4 +602,135 @@ class ScopaEngineTest {
         assertEquals(null, test.havingSettebello(playerCollectedCardsTest));
     }
 
+    @Test
+    public void countPlayersScoreTest() {
+
+        //Joueur1's collected cards
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        J1collectedCards.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.ACE));
+        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.SEVEN));
+
+        //Joueur2's collected cards
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.TWO));
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+
+        //Joueur3's collected cards
+        J3collectedCards.add(new Card(CardColor.SPADE, CardValue.ACE));
+
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+        playerCollectedCardsTest.put("Joueur2", J2collectedCards);
+        playerCollectedCardsTest.put("Joueur3", J3collectedCards);
+
+        playerCollectedScopaTest.put("Joueur1", 1);
+        playerCollectedScopaTest.put("Joueur2", 0);
+        playerCollectedScopaTest.put("Joueur3", 0);
+
+        var test = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
+        
+        Map<String, Integer> playerScoresTest = new HashMap<>();
+        playerScoresTest.put("Joueur1", 2);
+        playerScoresTest.put("Joueur2", 2);
+        playerScoresTest.put("Joueur3", 0);
+
+        assertEquals(playerScoresTest, test.countPlayersScores(playerCollectedCardsTest, playerCollectedScopaTest));
+    }
+
+    @Test
+    public void countPlayersScoreTestWith2BestCount() {
+
+        //Joueur1's collected cards
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        J1collectedCards.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.ACE));
+
+        //Joueur2's collected cards
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.TWO));
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+
+        //Joueur3's collected cards
+        J3collectedCards.add(new Card(CardColor.SPADE, CardValue.ACE));
+
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+        playerCollectedCardsTest.put("Joueur2", J2collectedCards);
+        playerCollectedCardsTest.put("Joueur3", J3collectedCards);
+
+        playerCollectedScopaTest.put("Joueur1", 1);
+        playerCollectedScopaTest.put("Joueur2", 0);
+        playerCollectedScopaTest.put("Joueur3", 2);
+
+        var test = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
+        
+        Map<String, Integer> playerScoresTest = new HashMap<>();
+        playerScoresTest.put("Joueur1", 2);
+        playerScoresTest.put("Joueur2", 3);
+        playerScoresTest.put("Joueur3", 2);
+
+        assertEquals(playerScoresTest, test.countPlayersScores(playerCollectedCardsTest, playerCollectedScopaTest));
+    }
+
+    @Test
+    public void countPlayersScoreTestWith3mostDenierCount() {
+
+        //Joueur1's collected cards
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+        J1collectedCards.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.ACE));
+
+        //Joueur2's collected cards
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+
+        //Joueur3's collected cards
+        J3collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+        playerCollectedCardsTest.put("Joueur2", J2collectedCards);
+        playerCollectedCardsTest.put("Joueur3", J3collectedCards);
+
+        playerCollectedScopaTest.put("Joueur1", 1);
+        playerCollectedScopaTest.put("Joueur2", 0);
+        playerCollectedScopaTest.put("Joueur3", 1);
+
+        var test = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
+        
+        Map<String, Integer> playerScoresTest = new HashMap<>();
+        playerScoresTest.put("Joueur1", 3);
+        playerScoresTest.put("Joueur2", 2);
+        playerScoresTest.put("Joueur3", 2);
+
+        assertEquals(playerScoresTest, test.countPlayersScores(playerCollectedCardsTest, playerCollectedScopaTest));
+    }
+
+    @Test
+    public void countPlayersScoreTestWithHavingSettebello() {
+
+        //Joueur1's collected cards
+        J1collectedCards.add(new Card(CardColor.CLUB, CardValue.SEVEN));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.ACE));
+
+        //Joueur2's collected cards
+        J2collectedCards.add(new Card(CardColor.DIAMOND, CardValue.SEVEN));
+
+        //Joueur3's collected cards
+        J3collectedCards.add(new Card(CardColor.DIAMOND, CardValue.ACE));
+
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+        playerCollectedCardsTest.put("Joueur2", J2collectedCards);
+        playerCollectedCardsTest.put("Joueur3", J3collectedCards);
+
+        playerCollectedScopaTest.put("Joueur1", 0);
+        playerCollectedScopaTest.put("Joueur2", 1);
+        playerCollectedScopaTest.put("Joueur3", 0);
+
+        var test = new LocalScopa(Set.of("Joueur1", "Joueur2", "Joueur3"));
+        
+        Map<String, Integer> playerScoresTest = new HashMap<>();
+        playerScoresTest.put("Joueur1", 1);
+        playerScoresTest.put("Joueur2", 3);
+        playerScoresTest.put("Joueur3", 1);
+
+        assertEquals(playerScoresTest, test.countPlayersScores(playerCollectedCardsTest, playerCollectedScopaTest));
+    }
 }

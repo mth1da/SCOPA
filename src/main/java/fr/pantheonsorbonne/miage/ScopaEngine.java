@@ -421,7 +421,7 @@ public abstract class ScopaEngine {
 		int maxCount = 0;
 		String winner = "";
 		//count the 
-		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
+		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards, playerCollectedScopa);
 		for (Map.Entry<String, Integer> player : playersScores.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
 			if (player.getValue() > maxCount) {
@@ -441,7 +441,7 @@ public abstract class ScopaEngine {
 	 * @param playerCollectedCards all cards collected by each player
 	 * @return playersScores a map of the players associated with their score
 	 */
-	protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
+	protected Map<String, Integer> countPlayersScores(Map<String, Queue<Card>> playerCollectedCards, Map<String, Integer> playerCollectedScopa) {
 		Map<String, Integer> playersScores = new HashMap<>();
 		for (Map.Entry<String, Queue<Card>> player : playerCollectedCards.entrySet()) {
 			int count = 0;
@@ -460,9 +460,14 @@ public abstract class ScopaEngine {
 			if (player.getKey().equals(havingSettebello(playerCollectedCards))) {
 				count++;
 			}
-			//ici ajt les points des collected scopa
+
 			playersScores.put(player.getKey(), count);
+
+			if(playerCollectedScopa.get(player.getKey()) != null){
+				playersScores.put(player.getKey(), count + playerCollectedScopa.get(player.getKey()));
+			}
 		}
+
 		return playersScores;
 	}
 
@@ -574,7 +579,7 @@ public abstract class ScopaEngine {
 
 	// not used for now A SUPPRIMER
 	protected void getCountPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
-		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards);
+		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards, playerCollectedScopa);
 		for (Map.Entry<String, Integer> player : playersScores.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
 		}
