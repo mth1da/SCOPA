@@ -67,7 +67,7 @@ public class Card {
     public String toFancyString() {
 
         int rank = this.getValue().ordinal();
-        if (rank > 7) {
+        if (rank > 6) {
             rank=rank+4;
         }
         return new String(Character.toChars(this.color.getCode() + rank));

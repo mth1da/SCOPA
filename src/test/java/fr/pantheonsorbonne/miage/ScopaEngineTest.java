@@ -2,17 +2,16 @@ package fr.pantheonsorbonne.miage;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.Lists;
+//import com.google.common.collect.Lists;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
-import fr.pantheonsorbonne.miage.AppTest.LocalScopaTest;
+//import fr.pantheonsorbonne.miage.AppTest.LocalScopaTest;
 import fr.pantheonsorbonne.miage.enums.CardColor;
 import fr.pantheonsorbonne.miage.enums.CardValue;
 import fr.pantheonsorbonne.miage.game.Card;
-import fr.pantheonsorbonne.miage.game.Deck;
 
 class ScopaEngineTest {
 
@@ -24,6 +23,8 @@ class ScopaEngineTest {
     Queue<Card> J1collectedCards = new LinkedList<>();
     Queue<Card> J2collectedCards = new LinkedList<>();
     Queue<Card> J3collectedCards = new LinkedList<>();
+    Map<String, Integer> playerCollectedScopaTest = new HashMap<>();
+    Queue<String> playersTest = new LinkedList<>();
 
 
     /*
@@ -319,13 +320,95 @@ class ScopaEngineTest {
         
         var test = new LocalScopa(Set.of("Joueur1"));
         test.initCollectedAndScopaCards();
-        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
         J1collectedCards.add(new Card(CardColor.HEART, CardValue.TWO));
+        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
 
         playerCollectedCardsTest.put("Joueur1", J1collectedCards);
 
-        assertEquals(playerCollectedCardsTest.get("Joueur1").toString(), test.processPairCards("Joueur1", pairCardsTest, roundDeckTest).get("Joueur1").toString());
+        String expected = playerCollectedCardsTest.get("Joueur1").toString();
+        String actual = test.processPairCards("Joueur1", pairCardsTest, roundDeckTest).get("Joueur1").toString();
+
+        assertEquals(expected, actual);
     }
+
+
+    /*
+     * tests on whether a point for a scopa is given or not
+     */
+    @Test
+    void processAScopaPointTest(){
+    
+        //the player's selected card
+        pairCardsTest.add(new Card(CardColor.DIAMOND, CardValue.KING));
+        //the pair of the deck
+        pairCardsTest.add(new Card(CardColor.HEART, CardValue.KING));
+        
+        var test = new LocalScopa(Set.of("Joueur1"));
+        test.initCollectedAndScopaCards();
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.KING));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.KING));
+
+        playerCollectedScopaTest.put("Joueur1", 1);
+
+        int expected = playerCollectedScopaTest.get("Joueur1");
+        int actual = test.processScopaPoint("Joueur1", roundDeckTest).get("Joueur1");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void processNoScopaPointTest(){
+
+        //there are still cards in the round deck
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.TWO));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.ACE));
+
+        //the player's selected card
+        pairCardsTest.add(new Card(CardColor.DIAMOND, CardValue.KING));
+        //the pair of the deck
+        pairCardsTest.add(new Card(CardColor.HEART, CardValue.KING));
+        
+        var test = new LocalScopa(Set.of("Joueur1"));
+        test.initCollectedAndScopaCards();
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.KING));
+        J1collectedCards.add(new Card(CardColor.HEART, CardValue.KING));
+
+        playerCollectedScopaTest.put("Joueur1", 0);
+
+        int expected = playerCollectedScopaTest.get("Joueur1");
+        int actual = test.processScopaPoint("Joueur1", roundDeckTest).get("Joueur1");
+
+        assertEquals(expected, actual);
+    }
+
+    /*
+     * test 
+     */
+    @Test
+    void addRemainingCardsToTheLastPlayerCollectedCards(){
+    	 
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.TWO));
+        roundDeckTest.add(new Card(CardColor.CLUB, CardValue.KING));
+        roundDeckTest.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        roundDeckTest.add(new Card(CardColor.SPADE, CardValue.SIX));
+
+        var test = new LocalScopa(Set.of("Joueur1"));
+        test.initCollectedAndScopaCards();
+
+        playersTest.offer("Joueur1");
+
+        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.TWO));
+        J1collectedCards.add(new Card(CardColor.CLUB, CardValue.KING));
+        J1collectedCards.add(new Card(CardColor.DIAMOND, CardValue.FIVE));
+        J1collectedCards.add(new Card(CardColor.SPADE, CardValue.SIX));
+        playerCollectedCardsTest.put("Joueur1", J1collectedCards);
+
+        String expected = playerCollectedCardsTest.get("Joueur1").toString();
+        String actual = test.addRemainingCardsToCollected(roundDeckTest, playersTest).get("Joueur1").toString();
+
+        assertEquals(expected, actual);
+    }
+
 
     /*
      * tests on bestCount method

@@ -8,9 +8,9 @@ public enum CardValue {
     FIVE("5", 5),
     SIX("6", 6),
     SEVEN("7", 7),
-    JACK("J", 11),
-    QUEEN("Q", 12),
-    KING("K", 13);
+    JACK("J", 8),
+    QUEEN("Q", 9),
+    KING("K", 10);
 
     final private String stringRepresentation;
     final private int rank;

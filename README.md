@@ -1,7 +1,7 @@
 # Règles
 
 La Scopa se joue avec 40 cartes de symbole coupes, épées, bâtons et deniers. Chaque symbole comporte un as, un valet, un chevalier, un roi et des cartes de valeurs allant de 2 à 7. 
-Par souci d'affichage, nous utiliserons 40 cartes françaises de symbole coeur (heart), pique (spade), trèfle (club) et carreau (diamond).  Chaque symbole comportera ainsi un as (ace), un valet (jack), une reine (queen), un roi (king) et des cartes de valeurs allant de 2 à 7.
+Par souci d'affichage, nous utiliserons 40 cartes françaises de symbole coeur (heart), pique (spade), trèfle (club) et carreau (diamond).  Chaque symbole comportera ainsi un as (ace), un chevalier (jack), une reine (queen), un roi (king) et des cartes de valeurs allant de 2 à 7.
 Le jeu se joue entre deux joueurs et quatre joueurs, et comporte un maitre du jeu non joueur.
 
 ## Mise en place
