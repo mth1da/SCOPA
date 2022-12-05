@@ -117,8 +117,6 @@ class ScopaEngineTest {
 
         assertEquals(true, test.makePair(playerCardsTest, roundDeckTest).isEmpty());
     }
-    
-    
 
     @Test
     void makePairWithoutSettebelloAndDenierTest() {
