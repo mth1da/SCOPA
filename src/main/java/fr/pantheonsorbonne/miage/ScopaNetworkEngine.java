@@ -4,6 +4,8 @@ import fr.pantheonsorbonne.miage.exception.NoMoreCardException;
 import fr.pantheonsorbonne.miage.game.Card;
 import fr.pantheonsorbonne.miage.model.Game;
 import fr.pantheonsorbonne.miage.model.GameCommand;
+import fr.pantheonsorbonne.miage.HostFacade;
+import fr.pantheonsorbonne.miage.Facade;
 
 import java.util.*;
 
@@ -12,6 +14,7 @@ import java.util.*;
  */
 public class ScopaNetworkEngine extends ScopaEngine {
     private static final int PLAYER_COUNT = 4;
+    private static final String CARDSFORYOU = "cardsForYou";
 
     private final HostFacade hostFacade;
     private final Set<String> players;
@@ -25,7 +28,7 @@ public class ScopaNetworkEngine extends ScopaEngine {
 
     public static void main(String[] args) {
         //create the host facade
-        HostFacade hostFacade = Facade.getFacade();
+        HostFacade hostFacade = (Hostfacade) Facade.getFacade();
         hostFacade.waitReady();
 
         //set the name of the player
@@ -61,7 +64,7 @@ public class ScopaNetworkEngine extends ScopaEngine {
      */
     @Override
     protected void giveCardsToPlayer(String playerName, String hand) {
-        hostFacade.sendGameCommandToPlayer(scopa, playerName, new GameCommand("cardsForYou", hand));
+        hostFacade.sendGameCommandToPlayer(scopa, playerName, new GameCommand(CARDSFORYOU, hand));
     }
 
 
@@ -90,7 +93,7 @@ public class ScopaNetworkEngine extends ScopaEngine {
             //remove him from the queue so he won't play again
             players.remove(cardProviderPlayer);
             //give back all the cards for this round to the second players
-            hostFacade.sendGameCommandToPlayer(scopa, cardProviderPlayerOpponent, new GameCommand("cardsForYou", Card.cardsToString(leftOverCard.toArray(new Card[leftOverCard.size()]))));
+            hostFacade.sendGameCommandToPlayer(scopa, cardProviderPlayerOpponent, new GameCommand(CARDSFORYOU, Card.cardsToString(leftOverCard.toArray(new Card[leftOverCard.size()]))));
             return null;
         }
 
@@ -108,7 +111,7 @@ public class ScopaNetworkEngine extends ScopaEngine {
         cards.addAll(roundStack);
         //shuffle the round deck so we are not stuck
         Collections.shuffle(cards);
-        hostFacade.sendGameCommandToPlayer(scopa, winner, new GameCommand("cardsForYou", Card.cardsToString(cards.toArray(new Card[cards.size()]))));
+        hostFacade.sendGameCommandToPlayer(scopa, winner, new GameCommand(CARDSFORYOU, Card.cardsToString(cards.toArray(new Card[cards.size()]))));
     }
 
     /**

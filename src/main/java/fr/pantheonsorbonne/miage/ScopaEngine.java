@@ -84,7 +84,7 @@ public abstract class ScopaEngine {
 						// put the card in the round deck
 						roundDeck.offer(selectedCard);
 					} catch (NoMoreCardException e) {
-						;
+						System.out.println("no more cards");
 					}
 				}
 			} else {
@@ -94,15 +94,6 @@ public abstract class ScopaEngine {
 				giveCardsToPlayer(currentPlayer, hand);
 			}
 			System.out.println("\n");
-
-			
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
 
 		}
 		//A SUPPRIMER
@@ -578,12 +569,14 @@ public abstract class ScopaEngine {
 	
 
 	// not used for now A SUPPRIMER
+	/*
 	protected void getCountPlayersScores(Map<String, Queue<Card>> playerCollectedCards) {
 		Map<String, Integer> playersScores = countPlayersScores(playerCollectedCards, playerCollectedScopa);
 		for (Map.Entry<String, Integer> player : playersScores.entrySet()) {
 			System.out.println(player.getKey() + " a " + player.getValue() + " points.");
 		}
 	}
+	*/
 
 	/**
 	 * give some card to a player
